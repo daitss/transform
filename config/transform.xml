@@ -1,0 +1,35 @@
+<!-- format transformation information used by transformation service -->
+<transformations>
+	<transformation ID='WAVE_NORM'>
+		<instruction>
+			ffmpeg -i #INPUT_FILE# -sameq -acodec pcm_s16le #OUTPUT_FILE#
+		</instruction>
+		<extension>.wav</extension>
+		<software>
+			FFmpeg version SVN-r9102, Copyright (c) 2000-2007 Fabrice Bellard, et al. 
+		</software>
+		<configuration>
+			--prefix=/opt/local --prefix=/opt/local --disable-vhook --mandir=/opt/local/share/man --enable-shared --enable-pthreads --disable-mmx
+		</configuration>
+		<dependency>
+			libavutil version: 49.4.0
+			libavcodec version: 51.40.4
+			libavformat version: 51.12.1
+		</dependency>
+	</transformation>
+	<transformation ID='AVI_NORM'>
+		<instruction>mencoder #INPUT_FILE# -oac pcm -ovc lavc -lavcopts vcodec=mjpeg -o #OUTPUT_FILE#
+		</instruction>
+		<extension>.avi</extension>
+	</transformation>
+	<transformation ID='MOV_NORM'>
+		<instruction>lqt_transcode -ac rawaudio -vc mjpa #INPUT_FILE# #OUTPUT_FILE#
+		</instruction>
+		<extension>.mov</extension>
+	</transformation>
+	<transformation ID='PDF_NORM'>
+		<instruction>gs -sDEVICE=tiff12nc -sOutputFile=#OUTPUT_FILE# -r150 -dBATCH -dNOPAUSE #INPUT_FILE#
+		</instruction>
+		<extension>page%d.tif</extension>
+	</transformation>
+</transformations>

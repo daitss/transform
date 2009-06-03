@@ -1,0 +1,22 @@
+The transform server performs the format transformation service for DAITSS 2.  
+
+INSTALLATION FOR DEVELOPMENT ENVIRONMENT
+- install required gems
+  gem install mongrel
+  gem install log4r
+
+- check out codes from svn, the svn URL is svn://tupelo.fcla.edu/shades/transform/trunk
+
+- add "lib" to the RUBYLIB environment variable
+
+- start up transform server
+  ruby transform.rb
+
+TRANSFORM HANDLER
+The transform handler takes a transformation identifier and the URL of the source file.  The transformation identifier is then used to look up the actual transformation instruction in the config file, transform.xml.  The file is then converted and sent back to the sender.
+1.  If the transformation results in one complete file (for example, a mp3-encoded wave file converted to pcm-encoded wave file), the result is sent back to the sender in application/octet-stream.
+2.  If the result of the transformation comprised of multiple files (for example, a pdf converted into a list of tiffs), the result is then sent back in multi parts of mixed content (Multipart/mixed).
+
+#transform a wave file
+curl http://localhost:3003/transform/WAVE_NORM/Users/Carol/Desktop/work/testdata/audio/wave/stereol.wav
+where the WAVE_NORM is the transformation identifier and "/Users/Carol/Desktop/work/testdata/audio/wave/stereol.wav" is the file to be transformed.
