@@ -21,16 +21,16 @@ class XformModule
     transformation = @config.find_first("/transformations/transformation[@ID='#{transformID}']")
 
     if (transformation == nil)
-      throw InstructionError.new("cannot find transformation #{transformID}")
+      raise InstructionError.new("cannot find transformation #{transformID}")
     end
 
     #retrieve the transformation instruction
-    @instruction = transformation.find_first("//instruction/text()").to_s
+    @instruction = transformation.find_first("instruction/text()").to_s
     if @instruction.nil?
-      throw  InstructionError.new("no transformation instruction is defined for #{transformID}")
+      raise InstructionError.new("no transformation instruction is defined for #{transformID}")
     end
 
-    @extension = transformation.find_first("//extension/text()").to_s
+    @extension = transformation.find_first("extension/text()").to_s
     if @extension.nil?
       @extension = ""
     end
@@ -53,7 +53,7 @@ class XformModule
     if ($? != 0)
       # clean up
       FileUtils.rmdir( @tempdir + filename)
-      throw TransformationError.new("#{command} failed")
+      raise TransformationError.new("#{command} failed")
     end
 
     # build the response

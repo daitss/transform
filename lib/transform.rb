@@ -55,7 +55,8 @@ get '/transform/:id' do |transformID|
   rescue TransformationError => te
     halt 500, te.message
   end
-
+  
+  xform = nil
   headers 'Content-Type' => 'application/xml'
   body result.to_s
   response.finish
