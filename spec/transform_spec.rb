@@ -8,7 +8,7 @@ describe 'Transform Service' do
 
   before(:all) do
       @url = '/transform'
-    end
+  end
 
   it "should return 200 for a successful GET on WAVE_NORM transformation information" do
     get "/transform/WAVE_NORM"

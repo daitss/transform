@@ -87,7 +87,6 @@ get '/file*' do
   else
     halt 410, "#{path} is no longer available"
   end
-
 end
 
 delete '/file*' do

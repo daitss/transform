@@ -1,5 +1,7 @@
 require "rubygems"
 
+# obsolete......
+
 class MsgPart
   attr_accessor :filename, :content
   def initialize(filename, content )
