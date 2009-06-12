@@ -6,7 +6,7 @@ require 'XformModule'
 LOGGERNAME = 'TransformService'
 TEMPDIR = '/var/tmp/transform/'
 
-#clean up the temp directory
+# clean up the temp directory
 FileUtils.rm_rf(TEMPDIR)
 FileUtils.mkdir(TEMPDIR)
 
@@ -74,9 +74,9 @@ get '/file*' do
     headers 'Content-Type' => "application/octet-stream"
     headers 'Content-Length' => File.size(path)
     fhandle = File.open(path)
-
     body fhandle.read
-    #delete the file after successful GET
+    
+    # delete the file after a successful GET
     File.delete(path)
     puts "#{path} has been retrieved and deleted"
     # delete the parent directory if it's empty

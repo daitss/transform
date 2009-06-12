@@ -2,7 +2,7 @@
 <transformations>
 	<transformation ID='WAVE_NORM'>
 		<instruction>
-			ffmpeg -i #INPUT_FILE# -sameq -acodec pcm_s16le #OUTPUT_FILE#
+			ffmpeg -i #INPUT_FILE# -sameq -acodec pcm_s16le -y #OUTPUT_FILE#
 		</instruction>
 		<extension>.wav</extension>
 		<software>
