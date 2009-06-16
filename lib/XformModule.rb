@@ -1,6 +1,6 @@
 require 'xml'
 
-CONFIGFILE = 'config/transform.xml'
+CONFIGFILE = File.join File.dirname(__FILE__), '..', 'config/transform.xml'
 INPUTFILE = '#INPUT_FILE#'
 OUTPUTFILE = '#OUTPUT_FILE#'
 BOUNDARY = '--page'

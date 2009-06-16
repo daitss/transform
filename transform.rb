@@ -1,6 +1,9 @@
 #!/usr/bin/ruby
+
 require 'rubygems'
 require 'sinatra'
+
+$:.unshift File.join(File.dirname(__FILE__), 'lib')
 require 'XformModule'
 
 LOGGERNAME = 'TransformService'
@@ -10,6 +13,7 @@ TEMPDIR = '/var/tmp/transform/'
 FileUtils.rm_rf(TEMPDIR)
 FileUtils.mkdir(TEMPDIR)
 
+class Transform < Sinatra::Base
 enable :logging
 
 error do
@@ -102,4 +106,6 @@ delete '/file*' do
 
 end
 
+end
 
+Transform.run! if __FILE__ == $0
