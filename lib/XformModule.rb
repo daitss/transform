@@ -38,6 +38,7 @@ class XformModule
     transformation.to_s
   end
 
+  # XXX host_url is not used with relativepaths, if we continue to go this way we can take it out.
   def transform(host_url, sourcepath)
     # extract the file name port from the source path
     ext = File.extname(sourcepath)
@@ -67,7 +68,7 @@ class XformModule
     doc.root = XML::Node.new('links')
 
     files.each do |file|
-      resource = host_url + "/file" + file
+      resource = "../file" + file
       link = XML::Node.new('link')
       link << resource
       doc.root << link
