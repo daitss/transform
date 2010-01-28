@@ -10,7 +10,7 @@ Sinatra::Application.set :environment, :development
 
 World do
   def app
-      Sinatra::Application
+      Transform
   end
   include Rack::Test::Methods
 end

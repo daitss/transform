@@ -4,5 +4,5 @@ Scenario: transform a PDF file
 	Given a PDF file
 	When transforming the file
 	Then I should receive 55 link to transformed file
-	And the status should be ok
+	And the status should be 200
 	And the transformed file should be received via the link
