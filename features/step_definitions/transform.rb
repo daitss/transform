@@ -33,6 +33,7 @@ end
 
 Given /^a valid transformation$/ do
   @transformID = "WAVE_NORM"
+  @file = "file://#{abs}/test-files/obj1.wav"
 end
 
 Given /^a invalid transformation$/ do
@@ -48,7 +49,6 @@ When /^retrieving the processing instruction$/ do
 end
 
 Then /^I should receive (.+?) link to transformed file$/ do |num|
-  puts last_response.body
   doc = XML::Document.string(last_response.body)
  
   # make sure there are expected number of bitstream objects
@@ -58,8 +58,10 @@ end
 
 Then /^the transformed file should be received via the link$/ do
   @list.each do |node|
-    puts node.content
-    get node.content
+    newurl = node.content
+    #chop off the relative path portion
+    newurl[".."] = ""
+    get newurl
     last_response.status.should == 200
   end
 end
