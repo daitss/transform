@@ -39,7 +39,7 @@ class XformModule
   end
 
   # XXX host_url is not used with relativepaths, if we continue to go this way we can take it out.
-  def transform(host_url, sourcepath)
+  def transform(sourcepath)
     # extract the file name port from the source path
     ext = File.extname(sourcepath)
     filename = File.basename(sourcepath, ext)
@@ -63,17 +63,5 @@ class XformModule
     # sorted by the numerical order of the file name,
     # mtime only goes to seconds, so can't do this :(   File.mtime(x) <=> File.mtime(y) 
     files = Dir.glob(tmpfiles).sort { |x,y| x =~ /.*?(\d+).*/; xn = $1.to_i; y =~ /.*?(\d+).*/; yn = $1.to_i; xn <=> yn }     
-
-    doc = XML::Document.new
-    doc.root = XML::Node.new('links')
-
-    files.each do |file|
-      resource = "../file" + file
-      link = XML::Node.new('link')
-      link << resource
-      doc.root << link
-    end
-    
-    doc
   end
 end

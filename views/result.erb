@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<premis xmlns="info:lc/xmlns/premis-v2">
+	<links>
+	<% @result.each do |file| %>
+	<link><%= "../file" + file %></link>
+	<% end %>
+</links>
+
+<event>
+	<eventIdentifier>
+		<eventIdentifierType>URI</eventIdentifierType>
+		<eventIdentifierValue>1</eventIdentifierValue>
+	</eventIdentifier>
+	<eventType>transformation</eventType>
+	<eventDateTime><%= Time.now.xmlschema %></eventDateTime>
+	<eventOutcomeInformation>
+		<eventOutcome>Success</eventOutcome>
+	</eventOutcomeInformation>
+
+	<linkingAgentIdentifier>
+	<linkingAgentIdentifierType>URI</linkingAgentIdentifierType>
+	<linkingAgentIdentifierValue>info:fda/daitss/transform/v0</linkingAgentIdentifierValue>
+</linkingAgentIdentifier>
+</event>
+
+<agent>
+	<agentIdentifier>
+		<agentIdentifierType>URI</agentIdentifierType>
+		<agentIdentifierValue>info:fda/daitss/transform/v0</agentIdentifierValue>
+	</agentIdentifier>
+	<agentName>Transformation Service</agentName>
+	<agentType>Web Service</agentType>
+</agent>
+</premis>

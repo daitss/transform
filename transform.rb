@@ -2,6 +2,7 @@
 
 require 'rubygems'
 require 'sinatra'
+require 'erb'
 
 $:.unshift File.join(File.dirname(__FILE__), 'lib')
 require 'XformModule'
@@ -51,10 +52,8 @@ class Transform < Sinatra::Base
         # make sure the file exist and it's a valid file
         halt 404, "#{@sourcepath} does not exist" unless (File.exist?(sourcepath) && File.file?(sourcepath))
         xform.retrieve(transformID)
-        
-        host_url = "http://" + Sinatra::Application.host + ":" + Sinatra::Application.port.to_s
-        puts "host: " + host_url
-        result = xform.transform(host_url, sourcepath)
+
+        @result = xform.transform(sourcepath)
       end
     rescue InstructionError => ie
       halt 501, ie.message
@@ -62,10 +61,10 @@ class Transform < Sinatra::Base
       halt 500, te.message
     end
 
-    xform = nil
+    # dump the xml output to the response
     headers 'Content-Type' => 'application/xml'
-    body result.to_s
-    response.finish
+    body erb(:result)
+    xform = nil
   end
 
   get '/file*' do 
