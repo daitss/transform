@@ -54,6 +54,8 @@ class Transform < Sinatra::Base
         xform.retrieve(transformID)
 
         @result = xform.transform(sourcepath)
+        @agentId = "info:fda/daitss/transform/v0"
+        @agentNote = xform.software
       end
     rescue InstructionError => ie
       halt 501, ie.message

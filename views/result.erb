@@ -23,12 +23,13 @@
 </linkingAgentIdentifier>
 </event>
 
-<agent>
+<agent xmlns="info:lc/xmlns/premis-v2-beta">
 	<agentIdentifier>
 		<agentIdentifierType>URI</agentIdentifierType>
-		<agentIdentifierValue>info:fda/daitss/transform/v0</agentIdentifierValue>
+		<agentIdentifierValue><%= @agentId %></agentIdentifierValue>
 	</agentIdentifier>
 	<agentName>Transformation Service</agentName>
 	<agentType>Web Service</agentType>
+	<agentNote><%= @agentNote %></agentNote>
 </agent>
 </premis>

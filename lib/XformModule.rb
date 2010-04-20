@@ -9,7 +9,8 @@ class InstructionError < StandardError; end
 class TransformationError < StandardError; end
 
 class XformModule
-
+   attr_reader :software
+   
   def initialize(tempdir)
     @config = XML::Document.file(CONFIGFILE)
     @tempdir = tempdir
@@ -31,10 +32,11 @@ class XformModule
     end
 
     @extension = transformation.find_first("extension/text()").to_s
-    if @extension.nil?
-      @extension = ""
-    end
+    @extension = ""  if @extension.nil?
 
+    @software = transformation.find_first("software/text()").to_s
+    @software = ""  if @software.nil?
+  
     transformation.to_s
   end
 
