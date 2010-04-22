@@ -29,6 +29,7 @@
 	</transformation>
 	<transformation ID='MOV_NORM'>
 		<instruction>lqt_transcode -ac rawaudio -vc mjpa #INPUT_FILE# #OUTPUT_FILE#</instruction>
+		<extension>.mov</extension>
 		<identifier>mov/norm/v0</identifier>
 		<software>
 		name                    libquicktime
@@ -41,7 +42,7 @@
 		                        --with-libiconv-prefix=${prefix} \
 		                        --with-libintl-prefix=${prefix} \
 		                        --enable-gpl
-		<extension>.mov</extension>
+		</software>
 	</transformation>
 	<transformation ID='PDF_NORM'>
 		<instruction>gs -sDEVICE=tiff12nc -sOutputFile=#OUTPUT_FILE# -r150 -dBATCH -dNOPAUSE #INPUT_FILE#</instruction>

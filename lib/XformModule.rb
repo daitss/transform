@@ -4,7 +4,7 @@ CONFIGFILE = File.join File.dirname(__FILE__), '..', 'config/transform.xml'
 INPUTFILE = '#INPUT_FILE#'
 OUTPUTFILE = '#OUTPUT_FILE#'
 BOUNDARY = '--page'
-IDPREFIX = "info:fda/daitss/transform"
+IDPREFIX = "info:fda/daitss/transform/"
 
 class InstructionError < StandardError; end
 class TransformationError < StandardError; end
