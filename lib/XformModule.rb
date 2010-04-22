@@ -4,13 +4,15 @@ CONFIGFILE = File.join File.dirname(__FILE__), '..', 'config/transform.xml'
 INPUTFILE = '#INPUT_FILE#'
 OUTPUTFILE = '#OUTPUT_FILE#'
 BOUNDARY = '--page'
+IDPREFIX = "info:fda/daitss/transform"
 
 class InstructionError < StandardError; end
 class TransformationError < StandardError; end
 
 class XformModule
    attr_reader :software
-   
+   attr_reader :identifier
+      
   def initialize(tempdir)
     @config = XML::Document.file(CONFIGFILE)
     @tempdir = tempdir
@@ -34,6 +36,13 @@ class XformModule
     @extension = transformation.find_first("extension/text()").to_s
     @extension = ""  if @extension.nil?
 
+    @identifier = transformation.find_first("identifier/text()")
+    if @identifier.nil?
+      @identifier = IDPREFIX 
+    else
+      @identifier = IDPREFIX +  @identifier.to_s
+    end
+    
     @software = transformation.find_first("software/text()").to_s
     @software = ""  if @software.nil?
   

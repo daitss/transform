@@ -1,10 +1,9 @@
 <!-- format transformation information used by transformation service -->
 <transformations>
 	<transformation ID='WAVE_NORM'>
-		<instruction>
-			ffmpeg -i #INPUT_FILE# -sameq -acodec pcm_s16le -y #OUTPUT_FILE#
-		</instruction>
+		<instruction>ffmpeg -i #INPUT_FILE# -sameq -acodec pcm_s16le -y #OUTPUT_FILE#</instruction>
 		<extension>.wav</extension>
+		<identifier>wave/norm/v0</identifier>
 		<software>
 		FFmpeg version SVN-r9102, Copyright (c) 2000-2007 Fabrice Bellard, et al.
 		  configuration: --prefix=/opt/local --prefix=/opt/local --disable-vhook --mandir=/opt/local/share/man --enable-shared --enable-pthreads --disable-mmx
@@ -15,9 +14,9 @@
 		</software>
 	</transformation>
 	<transformation ID='AVI_NORM'>
-		<instruction>mencoder #INPUT_FILE# -oac pcm -ovc lavc -lavcopts vcodec=mjpeg -o #OUTPUT_FILE#
-		</instruction>
+		<instruction>mencoder #INPUT_FILE# -oac pcm -ovc lavc -lavcopts vcodec=mjpeg -o #OUTPUT_FILE#</instruction>
 		<extension>.avi</extension>
+		<identifier>avi/norm/v0</identifier>		
 		<software>
 		MEncoder 1.0rc1-4.0.1 (C) 2000-2006 MPlayer Team
 		CPU: Intel(R) Core(TM)2 Duo CPU     T7500  @ 2.20GHz (Family: 6, Model: 15, Stepping: 11)
@@ -29,14 +28,25 @@
 		</software>		
 	</transformation>
 	<transformation ID='MOV_NORM'>
-		<instruction>lqt_transcode -ac rawaudio -vc mjpa #INPUT_FILE# #OUTPUT_FILE#
-		</instruction>
+		<instruction>lqt_transcode -ac rawaudio -vc mjpa #INPUT_FILE# #OUTPUT_FILE#</instruction>
+		<identifier>mov/norm/v0</identifier>
+		<software>
+		name                    libquicktime
+		version              	1.0.2
+		homepage                http://libquicktime.sourceforge.net/
+		depends_lib             port:gettext port:jpeg port:libiconv port:libpng port:zlib port:ffmpeg port:faac port:faad2 port:libvorbis port:libogg port:lame
+		configure.args          --without-gtk --without-alsa \
+		                        --with-libjpeg --with-libpng --with-ffmpeg \
+		                        --with-vorbis=${prefix} \
+		                        --with-libiconv-prefix=${prefix} \
+		                        --with-libintl-prefix=${prefix} \
+		                        --enable-gpl
 		<extension>.mov</extension>
 	</transformation>
 	<transformation ID='PDF_NORM'>
-		<instruction>gs -sDEVICE=tiff12nc -sOutputFile=#OUTPUT_FILE# -r150 -dBATCH -dNOPAUSE #INPUT_FILE#
-		</instruction>
+		<instruction>gs -sDEVICE=tiff12nc -sOutputFile=#OUTPUT_FILE# -r150 -dBATCH -dNOPAUSE #INPUT_FILE#</instruction>
 		<extension>page%d.tif</extension>
+		<identifier>pdf/norm/v0</identifier>
 		<software>
 		GPL Ghostscript 8.61 (2007-11-21)
 		Copyright (C) 2007 Artifex Software, Inc.  All rights reserved.
