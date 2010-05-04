@@ -16,8 +16,12 @@ class XformModule
   def initialize(tempdir)
     @config = XML::Document.file(CONFIGFILE)
     @tempdir = tempdir
+    puts @tempdir
   end
 
+  def finalize
+  end
+  
   def retrieve(transformID)
     # retrieve the designated processing instruction from the config file
     transformID.upcase!
@@ -55,8 +59,8 @@ class XformModule
     ext = File.extname(sourcepath)
     filename = File.basename(sourcepath, ext)
     # create a directory to hold the transformed files
-    FileUtils.makedirs( @tempdir + filename)
-    outputpath =  @tempdir + filename + "/" + "transformed" + @extension
+    FileUtils.makedirs( @tempdir + "/" + filename)
+    outputpath =  @tempdir  + "/" + filename + "/" + "transformed" + @extension
     command = @instruction.sub(INPUTFILE, sourcepath).sub(OUTPUTFILE, outputpath)
 
     # Log4r::Logger[LOGGERNAME].info command
@@ -64,12 +68,12 @@ class XformModule
     `#{command}`
     if ($? != 0)
       # clean up
-      FileUtils.rmdir( @tempdir + filename)
+      FileUtils.rmdir( @tempdir  + "/" + filename)
       raise TransformationError.new("#{command} failed")
     end
 
     # build the response
-    tmpfiles =  @tempdir + filename + "/*"
+    tmpfiles =  @tempdir  + "/" + filename + "/*"
 
     # sorted by the numerical order of the file name,
     # mtime only goes to seconds, so can't do this :(   File.mtime(x) <=> File.mtime(y) 

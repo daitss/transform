@@ -8,22 +8,27 @@ $:.unshift File.join(File.dirname(__FILE__), 'lib')
 require 'XformModule'
 
 LOGGERNAME = 'TransformService'
-TEMPDIR = '/var/tmp/transform/'
-
-# clean up the temp directory
-FileUtils.rm_rf(TEMPDIR)
-FileUtils.mkdir(TEMPDIR)
 
 class Transform < Sinatra::Base
   enable :logging
   set :root, File.dirname(__FILE__)
 
+  configure do
+    # create a unique temporary directory to hold the output files.
+    tf = Tempfile.new("transform") 
+
+    $tempdir = tf.path
+    tf.close!
+    puts $tempdir
+    FileUtils.mkdir($tempdir)
+  end
+  
   error do
     'Encounter Error ' + env['sinatra.error'].name
   end
 
   get '/transform/:id' do |transformID|
-    xform = XformModule.new(TEMPDIR)
+    xform = XformModule.new($tempdir)
 
     begin
       if (params["location"].nil?)
@@ -109,6 +114,11 @@ class Transform < Sinatra::Base
 
   end
 
+  at_exit do 
+    puts "SHUTTING DOWN!, deleting #{$tempdir}" 
+    FileUtils.remove_dir($tempdir)
+  end
 end
 
 Transform.run! if __FILE__ == $0
+
