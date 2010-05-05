@@ -15,12 +15,8 @@ class Transform < Sinatra::Base
 
   configure do
     # create a unique temporary directory to hold the output files.
-    tf = Tempfile.new("transform") 
-
-    $tempdir = tf.path
-    tf.close!
-    puts $tempdir
-    FileUtils.mkdir($tempdir)
+    $tempdir = Dir.mktmpdir
+    puts "create #{$tempdir}"
   end
   
   error do
@@ -77,7 +73,6 @@ class Transform < Sinatra::Base
   get '/file*' do 
     # get params from request
     path = params[:splat].to_s
-    puts "path = " + path
 
     halt 400, "need to specify the resource" unless path
     # Log4r::Logger[LOGGERNAME].info "path = #{path}"
@@ -115,8 +110,8 @@ class Transform < Sinatra::Base
   end
 
   at_exit do 
-    puts "SHUTTING DOWN!, deleting #{$tempdir}" 
-    FileUtils.remove_dir($tempdir)
+    puts "SHUTTING DOWN!, cleaning up #{$tempdir}" 
+    FileUtils.remove_entry_secure($tempdir)
   end
 end
 

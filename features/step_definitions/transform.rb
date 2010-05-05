@@ -1,4 +1,5 @@
 require 'xml'
+require 'cgi'
 abs = FileUtils.pwd
 
 Given /^a PDF file$/ do
@@ -61,8 +62,8 @@ Then /^the transformed file should be received via the link$/ do
   @list.each do |node|
     newurl = node.content
     # chop off the relative path portion
-    newurl[".."] = ""
-    get newurl
+    newurl["../"] = ""
+    get CGI.escape(newurl)
     last_response.status.should == 200
   end
 end
