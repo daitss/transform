@@ -14,3 +14,5 @@ World do
   end
   include Rack::Test::Methods
 end
+
+require 'ruby-debug'

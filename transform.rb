@@ -18,12 +18,13 @@ class Transform < Sinatra::Base
     $tempdir = Dir.mktmpdir
     puts "create #{$tempdir}"
   end
-  
+
   error do
     'Encounter Error ' + env['sinatra.error'].name
   end
 
   get '/transform/:id' do |transformID|
+    #debugger
     xform = XformModule.new($tempdir)
 
     begin
@@ -70,12 +71,13 @@ class Transform < Sinatra::Base
     xform = nil
   end
 
-  get '/file*' do 
+  get '/file*' do
     # get params from request
-    path = params[:splat].to_s
+    path = params[:splat].first
 
     halt 400, "need to specify the resource" unless path
     # Log4r::Logger[LOGGERNAME].info "path = #{path}"
+
     if (File.exist?(path) && File.file?(path)) then
       # build the response
       headers 'Content-Type' => "application/octet-stream"
@@ -109,8 +111,8 @@ class Transform < Sinatra::Base
 
   end
 
-  at_exit do 
-    puts "SHUTTING DOWN!, cleaning up #{$tempdir}" 
+  at_exit do
+    puts "SHUTTING DOWN!, cleaning up #{$tempdir}"
     FileUtils.remove_entry_secure($tempdir)
   end
 end
