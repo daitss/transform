@@ -3,6 +3,7 @@
 require 'rubygems'
 require 'sinatra'
 require 'erb'
+require 'cgi'
 
 $:.unshift File.join(File.dirname(__FILE__), 'lib')
 require 'XformModule'
@@ -71,10 +72,8 @@ class Transform < Sinatra::Base
     xform = nil
   end
 
-  get '/file*' do
-    # get params from request
-    path = params[:splat].first
-
+  get '/file' do
+    path = params[:path]
     halt 400, "need to specify the resource" unless path
     # Log4r::Logger[LOGGERNAME].info "path = #{path}"
 
@@ -98,9 +97,9 @@ class Transform < Sinatra::Base
     end
   end
 
-  delete '/file*' do
+  delete '/file' do
     # get params from request
-    path = params[:splat].to_s
+    path = params[:path]
 
     halt 400, "need to specify the resource  to the requested file" unless path
     if (File.exist?(path) && File.file?(path)) then

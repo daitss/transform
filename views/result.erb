@@ -2,7 +2,7 @@
 <premis xmlns="info:lc/xmlns/premis-v2">
 	<links>
 	<% @result.each do |file| %>
-	<link><%= "../file" + file %></link>
+	<link><%= "../file?path=" + CGI.escape(file) %></link>
 	<% end %>
 </links>
 
