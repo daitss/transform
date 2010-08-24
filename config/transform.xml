@@ -3,7 +3,7 @@
 	<transformation ID='WAVE_NORM'>
 		<instruction>ffmpeg -i #INPUT_FILE# -sameq -acodec pcm_s16le -y #OUTPUT_FILE#</instruction>
 		<extension>.wav</extension>
-		<identifier>wave/norm/v0</identifier>
+		<identifier>wave/norm/v0.1.0</identifier>
 		<software>
 		FFmpeg version SVN-r9102, Copyright (c) 2000-2007 Fabrice Bellard, et al.
 		  configuration: --prefix=/opt/local --prefix=/opt/local --disable-vhook --mandir=/opt/local/share/man --enable-shared --enable-pthreads --disable-mmx
@@ -16,7 +16,7 @@
 	<transformation ID='AVI_NORM'>
 		<instruction>mencoder #INPUT_FILE# -oac pcm -ovc lavc -lavcopts vcodec=mjpeg -o #OUTPUT_FILE#</instruction>
 		<extension>.avi</extension>
-		<identifier>avi/norm/v0</identifier>		
+		<identifier>avi/norm/v0.1.0</identifier>		
 		<software>
 		MEncoder 1.0rc1-4.0.1 (C) 2000-2006 MPlayer Team
 		CPU: Intel(R) Core(TM)2 Duo CPU     T7500  @ 2.20GHz (Family: 6, Model: 15, Stepping: 11)
@@ -30,7 +30,7 @@
 	<transformation ID='MOV_NORM'>
 		<instruction>lqt_transcode -ac rawaudio -vc mjpa #INPUT_FILE# #OUTPUT_FILE#</instruction>
 		<extension>.mov</extension>
-		<identifier>mov/norm/v0</identifier>
+		<identifier>mov/norm/v0.1.0</identifier>
 		<software>
 		name                    libquicktime
 		version              	1.0.2
@@ -47,7 +47,7 @@
 	<transformation ID='PDF_NORM'>
 		<instruction>gs -sDEVICE=tiff12nc -sOutputFile=#OUTPUT_FILE# -r150 -dBATCH -dNOPAUSE #INPUT_FILE#</instruction>
 		<extension>page%d.tif</extension>
-		<identifier>pdf/norm/v0</identifier>
+		<identifier>pdf/norm/v0.1.0</identifier>
 		<software>
 		GPL Ghostscript 8.61 (2007-11-21)
 		Copyright (C) 2007 Artifex Software, Inc.  All rights reserved.
