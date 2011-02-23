@@ -40,11 +40,13 @@ get '/transform/:id' do |transformID|
         sourcepath = url.path
       when "http"
         resource = Net::HTTP.get_response url
-        Tempfile.open("file2transform") do |io|
-          io.write resource.body
-          io.flush
-          sourcepath = io.path
-        end
+        index = url.path.rindex('.')
+        file_ext = url.path.slice(index, url.path.length) if index
+        io = Tempfile.new(['file2describe', file_ext])
+        io.write resource.body
+        io.flush
+        sourcepath = io.path
+        io.close
       else
         halt 400, "invalid url location type"
       end
@@ -64,7 +66,11 @@ get '/transform/:id' do |transformID|
   rescue TransformationError => te
     halt 500, te.message
   end
-
+  
+  # remove temp file
+  if io
+    io.unlink
+  end
   # dump the xml output to the response
   headers 'Content-Type' => 'application/xml'
   body erb(:result)

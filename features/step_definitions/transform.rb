@@ -1,25 +1,26 @@
 require 'xml'
 require 'cgi'
 abs = FileUtils.pwd
+path = 'http://www.fcla.edu/daitss-test/files/'
 
 Given /^a PDF file$/ do
   @transformID = "PDF_NORM"
-  @file = "file://#{abs}/test-files/tagged.pdf"
+  @file = "#{path}tagged.pdf"
 end
 
 Given /^a wave file$/ do
   @transformID = "WAVE_NORM"
-  @file = "file://#{abs}/test-files/obj1.wav"
+  @file = "#{path}obj1.wav"
 end
 
 Given /^an AVI file$/ do
   @transformID = "AVI_NORM"
-  @file = "file://#{abs}/test-files/video.avi"
+  @file = "#{path}video.avi"
 end
 
 Given /^a quicktime file$/ do
   @transformID = "MOV_NORM"
-  @file = "file://#{abs}/test-files/thesis.mov"
+  @file = "#{path}thesis.mov"
 end
 
 Given /^a non\-exist file$/ do
@@ -29,12 +30,12 @@ end
 
 Given /^a bad pdf$/ do
   @transformID = "PDF_NORM"
-  @file = "file://#{abs}/test-files/etd.pdf"
+  @file = "#{path}etd.pdf"
 end
 
 Given /^a valid transformation$/ do
   @transformID = "WAVE_NORM"
-  @file = "file://#{abs}/test-files/obj1.wav"
+  @file = "#{path}obj1.wav"
 end
 
 Given /^a invalid transformation$/ do
