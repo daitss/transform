@@ -14,9 +14,8 @@ class XformModule
    attr_reader :identifier
       
   def initialize(tempdir)
-    @config = XML::Document.file(CONFIGFILE)
+    @config = open(CONFIGFILE) { |io| XML::Document.io io } 
     @tempdir = tempdir
-    puts @tempdir
   end
 
   def finalize
