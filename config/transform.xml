@@ -3,37 +3,32 @@
 	<transformation ID='WAVE_NORM'>
 		<instruction>ffmpeg -i #INPUT_FILE# -sameq -acodec pcm_s16le -y #OUTPUT_FILE#</instruction>
 		<extension>.wav</extension>
-		<identifier>wave/norm/v0.1.0</identifier>
+		<identifier>wave/norm/v0.1.1</identifier>
 		<software>
-		FFmpeg version SVN-r9102, Copyright (c) 2000-2007 Fabrice Bellard, et al.
-		  configuration: --prefix=/opt/local --prefix=/opt/local --disable-vhook --mandir=/opt/local/share/man --enable-shared --enable-pthreads --disable-mmx
-		  libavutil version: 49.4.0
-		  libavcodec version: 51.40.4
-		  libavformat version: 51.12.1
-		  built on Dec 20 2007 13:43:03, gcc: 4.0.1 (Apple Inc. build 5465)
+			FFmpeg version %{evr}, Copyright (c) 2000-2009 Fabrice Bellard, et al.
+			  configuration: --prefix=/usr --libdir=/usr/lib64 --shlibdir=/usr/lib64 --mandir=/usr/share/man --enable-shared --enable-gpl --enable-nonfree --enable-pthreads --disable-avisynth --disable-vhook --disable-mmx --enable-libdc1394 --enable-libfaac --enable-libfaad --enable-libfaadbin --enable-libmp3lame --enable-libopenjpeg --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libx264 --enable-libxvid --extra-cflags=-O2 -g -m64 -mtune=generic -fPIC --disable-stripping
+			  libavutil     49.15. 0 / 49.15. 0
+			  libavcodec    52.20. 1 / 52.20. 1
+			  libavformat   52.31. 0 / 52.31. 0
+			  libavdevice   52. 1. 0 / 52. 1. 0
+			  built on May 10 2010 12:38:53, gcc: 4.1.2 20080704 (Red Hat 4.1.2-46)
 		</software>
 	</transformation>
 	<transformation ID='AVI_NORM'>
 		<instruction>mencoder #INPUT_FILE# -oac pcm -ovc lavc -lavcopts vcodec=mjpeg -o #OUTPUT_FILE#</instruction>
 		<extension>.avi</extension>
-		<identifier>avi/norm/v0.1.0</identifier>		
+		<identifier>avi/norm/v0.1.1</identifier>		
 		<software>
-		MEncoder 1.0rc1-4.0.1 (C) 2000-2006 MPlayer Team
-		CPU: Intel(R) Core(TM)2 Duo CPU     T7500  @ 2.20GHz (Family: 6, Model: 15, Stepping: 11)
-		MMX supported but disabled
-		MMX2 supported but disabled
-		SSE supported but disabled
-		CPUflags: Type: 6 MMX: 0 MMX2: 0 3DNow: 0 3DNow2: 0 SSE: 0 SSE2: 1
-		Compiled for x86 CPU with extensions: SSE2
+			MEncoder SVN-r28728-snapshot-4.1.2 (C) 2000-2009 MPlayer Team
 		</software>		
 	</transformation>
 	<transformation ID='MOV_NORM'>
 		<instruction>lqt_transcode -ac rawaudio -vc mjpa #INPUT_FILE# #OUTPUT_FILE#</instruction>
 		<extension>.mov</extension>
-		<identifier>mov/norm/v0.1.0</identifier>
+		<identifier>mov/norm/v0.1.1</identifier>
 		<software>
 		name                    libquicktime
-		version              	1.0.2
+		version              	1.1.5
 		homepage                http://libquicktime.sourceforge.net/
 		depends_lib             port:gettext port:jpeg port:libiconv port:libpng port:zlib port:ffmpeg port:faac port:faad2 port:libvorbis port:libogg port:lame
 		configure.args          --without-gtk --without-alsa \
@@ -42,15 +37,6 @@
 		                        --with-libiconv-prefix=${prefix} \
 		                        --with-libintl-prefix=${prefix} \
 		                        --enable-gpl
-		</software>
-	</transformation>
-	<transformation ID='PDF_NORM'>
-		<instruction>gs -sDEVICE=tiff12nc -sOutputFile=#OUTPUT_FILE# -r150 -dBATCH -dNOPAUSE #INPUT_FILE#</instruction>
-		<extension>page%d.tif</extension>
-		<identifier>pdf/norm/v0.1.0</identifier>
-		<software>
-		GPL Ghostscript 8.61 (2007-11-21)
-		Copyright (C) 2007 Artifex Software, Inc.  All rights reserved.
 		</software>
 	</transformation>
 </transformations>
