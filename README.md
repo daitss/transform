@@ -17,11 +17,14 @@ Quickstart
 	%git clone git://github.com/daitss/transform.git
 	or download a copy from the download page.
 
-	2. Test the installation via the test harness. 
-	%cucumber feature/*
+	2. Install all the required gems according to the Gemfile in this project
+	% bundle install
+	
+	3. Test the installation via the test harness. 
+	% bundle exec cucumber feature/*
 
-	3. Run the transformation service
-	%ruby transform.rb
+	4. Run the description srvice with thin (use "thin --help" to get additional information on using thin)
+	% bundle exec thin start
 
 Requirement
 -----------
@@ -29,7 +32,7 @@ Requirement
 * cucumber (gem)
 * libxml-ruby (gem)
 * log4r (gem)
-* sinatra (gem) - a minimal web application framework.  It will work with any web server such as mongrel, thin, etc.
+* sinatra (gem) - a minimal web application framework.  It will work with any web server such as mongrel, thin, apache etc.
 * install any desired tools (such as ffmpeg, libquicktime, ghostscript, mencoder, etc) on your system.  The
   config/transform.xml contains default setup to use those tools.
 
