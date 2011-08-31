@@ -115,6 +115,10 @@ delete '/file' do
 
 end
 
+get '/status' do
+  [ 200, {'Content-Type'  => 'application/xml'}, "<status/>\n" ]
+end
+
 at_exit do
   puts "SHUTTING DOWN!, cleaning up #{$tempdir}"
   FileUtils.remove_entry_secure($tempdir)
