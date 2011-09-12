@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/daitss/datyl.git
+  revision: 53f8c8142a0e2df2fa3a1df0095abb8646ab0483
+  specs:
+    datyl (0.1.2)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -16,6 +22,7 @@ GEM
     libxml-ruby (2.2.2)
     linecache (0.46)
       rbx-require-relative (> 0.0.4)
+    log4r (1.1.9)
     rack (1.3.2)
     rack-test (0.6.1)
       rack (>= 1.0)
@@ -35,7 +42,7 @@ GEM
       linecache (>= 0.3)
     sinatra (1.2.6)
       rack (~> 1.1)
-      tilt (>= 1.2.2, < 2.0)
+      tilt (< 2.0, >= 1.2.2)
     term-ansicolor (1.0.6)
     tilt (1.3.3)
 
@@ -44,7 +51,9 @@ PLATFORMS
 
 DEPENDENCIES
   cucumber
+  datyl!
   libxml-ruby
+  log4r
   rack-test
   rspec
   ruby-debug

@@ -1,0 +1,41 @@
+# This is an example of the DAITSS configuration file restricted to
+# the data necessary to run the transform service.
+#
+# You must set up your web server to set the environment variable
+# DAITSS_CONFIG to point to a configuration file along these lines,
+# though typically it will have sections for many services in addition
+# to this one.
+#
+# Please don't use tabs in this file.
+
+defaults:
+     temp_directory:             /tmp
+
+# We normally name sections after the virtual hostname used by an
+# applcation (this is so one physical host can run multiple services
+# of the same kind).  An application's configuration code typically
+# checks the VIRTUAL_HOSTNAME environment variable to determine the
+# appropriate section to load.  Typically VIRTUAL_HOSTNAME is set in
+# the same place that the DAITSS_CONFIG environment is set.
+
+transform.example.org:
+    log_syslog_facility:         LOG_LOCAL0
+    log_filename:                transform.log
+
+# defaults:temp_directory
+# -----------------------
+# Where should temporary files be created? This should be at least
+# twice the size of the largest package you plan to ingest, plus
+# headroom.  Defaults to system-defined temp directory (typically
+# /tmp/)
+
+# transform:log_syslog_facility
+# -------------------------------
+# If set, direct log information to this syslog facility (see
+# /etc/syslog.conf). If neither log_filename nor log_syslog_facility
+# are set, log to STDERR.
+#
+# transform:log_filename
+# -------------------------------
+# If set, direct log information to this file. If neither log_filename
+# nor log_syslog_facility are set, log to STDERR.

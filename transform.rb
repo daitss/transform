@@ -1,26 +1,74 @@
 #!/usr/bin/ruby
 
 require 'rubygems'
-require 'bundler'
-Bundler.setup
+require 'bundler/setup'
 
 require 'sinatra'
 require 'erb'
 require 'cgi'
 
+require 'datyl/logger'
+require 'datyl/config'
+
+
 $:.unshift File.join(File.dirname(__FILE__), 'lib')
 require 'XformModule'
 
-LOGGERNAME = 'TransformService'
+include Datyl
+
+def get_config
+  raise "No DAITSS_CONFIG environment variable has been set, so there's no configuration file to read"             unless ENV['DAITSS_CONFIG']
+  raise "The DAITSS_CONFIG environment variable points to a non-existant file, (#{ENV['DAITSS_CONFIG']})"          unless File.exists? ENV['DAITSS_CONFIG']
+  raise "The DAITSS_CONFIG environment variable points to a directory instead of a file (#{ENV['DAITSS_CONFIG']})"     if File.directory? ENV['DAITSS_CONFIG']
+  raise "The DAITSS_CONFIG environment variable points to an unreadable file (#{ENV['DAITSS_CONFIG']})"            unless File.readable? ENV['DAITSS_CONFIG']
+
+  Datyl::Config.new(ENV['DAITSS_CONFIG'], :defaults, ENV['VIRTUAL_HOSTNAME'])
+end
 
 configure do
-  # create a unique temporary directory to hold the output files.
-  $tempdir = Dir.mktmpdir
-  puts "create #{$tempdir}"
+  config = get_config
+
+  ENV['TMPDIR'] = config.temp_directory
+  $tempdir = config.temp_directory
+
+  disable :logging        # Stop CommonLogger from logging to STDERR; we'll set it up ourselves.
+
+  disable :dump_errors    # Normally set to true in 'classic' style apps (of which this is one) regardless of :environment; it adds a backtrace to STDERR on all raised errors (even those we properly handle). Not so good.
+
+  set :environment,  :production  # Get some exceptional defaults.
+
+  set :raise_errors, false        # Handle our own exceptions.
+
+  Datyl::Logger.setup('Transform', ENV['VIRTUAL_HOSTNAME'])
+
+  if not (config.log_syslog_facility or config.log_filename)
+    Datyl::Logger.stderr # log to STDERR
+  end
+
+  Datyl::Logger.facility = config.log_syslog_facility if config.log_syslog_facility
+  Datyl::Logger.filename = config.log_filename if config.log_filename
+
+  Datyl::Logger.info "Starting up transform service"
+
+  use Rack::CommonLogger, Datyl::Logger.new(:info, 'Rack:')
 end
 
 error do
-  'Encounter Error ' + env['sinatra.error'].name
+  e = @env['sinatra.error']
+
+  request.body.rewind if request.body.respond_to?('rewind') # work around for verbose passenger warning
+
+  Datyl::Logger.err "Caught exception #{e.class}: '#{e.message}'; backtrace follows", @env
+  e.backtrace.each { |line| Datyl::Logger.err line, @env }
+
+  halt 500, { 'Content-Type' => 'text/plain' }, e.message + "\n"
+end
+
+not_found do
+  request.body.rewind if request.body.respond_to?(:rewind)
+
+  content_type 'text/plain'  
+  "Not Found\n"
 end
 
 get '/transform/:id' do |transformID|
@@ -32,7 +80,7 @@ get '/transform/:id' do |transformID|
       # return the transformation instructions of the transformation identifier
       result = xform.retrieve(transformID)
     else
-      puts "location = " + params["location"]
+      Datyl::Logger.info "location = " + params["location"]
       url = URI.parse(params["location"].to_s)
 
       case url.scheme
@@ -66,7 +114,7 @@ get '/transform/:id' do |transformID|
   rescue TransformationError => te
     halt 500, te.message
   end
-  
+
   # remove temp file
   if io
     io.unlink
@@ -80,7 +128,6 @@ end
 get '/file' do
   path = params[:path]
   halt 400, "need to specify the resource" unless path
-  # Log4r::Logger[LOGGERNAME].info "path = #{path}"
 
   if (File.exist?(path) && File.file?(path)) then
     # build the response
@@ -91,7 +138,7 @@ get '/file' do
 
     # delete the file after a successful GET
     File.delete(path)
-    puts "#{path} has been retrieved and deleted"
+    Datyl::Logger.info "#{path} has been retrieved and deleted"
     # delete the parent directory if it's empty
     if (Dir.entries(File.dirname(path)) == [".", ".."])
       Dir.delete(File.dirname(path))
@@ -120,6 +167,6 @@ get '/status' do
 end
 
 at_exit do
-  puts "SHUTTING DOWN!, cleaning up #{$tempdir}"
+  Datyl::Logger.info "SHUTTING DOWN!, cleaning up #{$tempdir}"
   FileUtils.remove_entry_secure($tempdir)
 end

@@ -62,7 +62,6 @@ class XformModule
     outputpath =  @tempdir  + "/" + filename + "/" + "transformed" + @extension
     command = @instruction.sub(INPUTFILE, sourcepath).sub(OUTPUTFILE, outputpath)
 
-    # Log4r::Logger[LOGGERNAME].info command
     # backquote the external program, do the transformation 
     `#{command}`
     if ($? != 0)

@@ -1,5 +1,7 @@
 source "http://rubygems.org"
 gem "sinatra"
+gem "datyl", :git => "git://github.com/daitss/datyl.git"
+gem "log4r"
 
 group :test do
   gem "cucumber", :require => "spec"
