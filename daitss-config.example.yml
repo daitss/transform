@@ -9,7 +9,6 @@
 # Please don't use tabs in this file.
 
 defaults:
-     temp_directory:             /tmp
 
 # We normally name sections after the virtual hostname used by an
 # applcation (this is so one physical host can run multiple services
@@ -21,13 +20,6 @@ defaults:
 transform.example.org:
     log_syslog_facility:         LOG_LOCAL0
     log_filename:                transform.log
-
-# defaults:temp_directory
-# -----------------------
-# Where should temporary files be created? This should be at least
-# twice the size of the largest package you plan to ingest, plus
-# headroom.  Defaults to system-defined temp directory (typically
-# /tmp/)
 
 # transform:log_syslog_facility
 # -------------------------------
