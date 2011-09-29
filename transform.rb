@@ -6,6 +6,7 @@ require 'bundler/setup'
 require 'sinatra'
 require 'erb'
 require 'cgi'
+require 'net/http'
 
 require 'datyl/logger'
 require 'datyl/config'
@@ -28,9 +29,10 @@ end
 configure do
   config = get_config
 
-  ENV['TMPDIR'] = config.temp_directory
-  $tempdir = config.temp_directory
-
+  # create a unique temporary directory to hold the output files.
+  $tempdir = Dir.mktmpdir
+  puts "create #{$tempdir}"
+  
   disable :logging        # Stop CommonLogger from logging to STDERR; we'll set it up ourselves.
 
   disable :dump_errors    # Normally set to true in 'classic' style apps (of which this is one) regardless of :environment; it adds a backtrace to STDERR on all raised errors (even those we properly handle). Not so good.
@@ -72,9 +74,11 @@ not_found do
 end
 
 get '/transform/:id' do |transformID|
+  #require 'ruby-debug'
   #debugger
   xform = XformModule.new($tempdir)
-
+  sourcepath = nil
+  
   begin
     if (params["location"].nil?)
       # return the transformation instructions of the transformation identifier
@@ -105,14 +109,16 @@ get '/transform/:id' do |transformID|
       halt 404, "#{@sourcepath} does not exist" unless (File.exist?(sourcepath) && File.file?(sourcepath))
       xform.retrieve(transformID)
 
-      @result = xform.transform(sourcepath)
+      @result = xform.transform(sourcepath) if sourcepath
       @agentId =  xform.identifier
       @agentNote = xform.software
     end
   rescue InstructionError => ie
-    halt 501, ie.message
+    halt 501, "#{ie.message}"
   rescue TransformationError => te
-    halt 500, te.message
+    halt 500, "running into exception #{te}, #{te.message}\n#{te.backtrace.join('\n')}"
+  rescue e
+    halt [500, "running into exception #{e}, #{e.message}\n#{e.backtrace.join('\n')}"]
   end
 
   # remove temp file
@@ -168,5 +174,9 @@ end
 
 at_exit do
   Datyl::Logger.info "SHUTTING DOWN!, cleaning up #{$tempdir}"
-  FileUtils.remove_entry_secure($tempdir)
+  begin
+    FileUtils.remove_entry_secure($tempdir)
+  rescue e
+    Datyl::Logger.info  "running into exception #{e}, #{e.message}\n#{e.backtrace.join('\n')}"
+  end
 end
