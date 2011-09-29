@@ -50,8 +50,10 @@ When /^retrieving the processing instruction$/ do
   get "/transform/#{@transformID}", :location => @file
 end
 
-Then /^I should receive (.+?) link to transformed file$/ do |num|
+Then /^I should receive (.+?) link to transformed file$/ do |num|  
+  puts last_response.body
   doc = XML::Document.string(last_response.body)
+
   # make sure there are expected number of bitstream objects
   @list = doc.find("//premis:link", 'premis' => 'info:lc/xmlns/premis-v2')
   i = 0
