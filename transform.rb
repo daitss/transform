@@ -31,7 +31,7 @@ configure do
 
   # create a unique temporary directory to hold the output files.
   $tempdir = Dir.mktmpdir
-  puts "create #{$tempdir}"
+  # puts "create #{$tempdir}"
   
   disable :logging        # Stop CommonLogger from logging to STDERR; we'll set it up ourselves.
 
@@ -51,6 +51,7 @@ configure do
   Datyl::Logger.filename = config.log_filename if config.log_filename
 
   Datyl::Logger.info "Starting up transform service"
+  Datyl::Logger.info "Using temp directory #{ENV['TMPDIR']}"
 
   use Rack::CommonLogger, Datyl::Logger.new(:info, 'Rack:')
 end
