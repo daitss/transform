@@ -7,7 +7,9 @@ Format Transformation Service
 * The transformation identifier is then used to look up the actual transformation 
   instruction in the config file i.e., transform.xml.
 * The transformation service then performs the format transformation, locally cache the created files 
-  with proper file extension and send back the link(s) of the created file(s).
+  with proper file extension and send back the link(s) of the created file(s).  The transformation service
+  would also return associated premis event and agent to record the result of the transformation and the software
+  that is used for the transformation.
 * The calling client would parse the return links to retrieve the created files.
 * Once the created file(s) are retrieved by the calling clients, the local caches for the files are removed.
 
@@ -53,16 +55,25 @@ Usage
 * Use http GET method with a location parameter pointing to the FILE url of the intended file and a 
   transformation identifier defined in transform.xml
   For example, if using curl
-	curl http://localhost:3003/transform/WAVE_NORM?location=file//Users/Carol/Desktop/work/testdata/audio/wave/stereol.wav
+	curl http://transformation.fda.edu/transform/WAVE_NORM?location=file:///Users/Dummy/testdata/audio/wave/stereol.wav
 	where the WAVE_NORM is the transformation identifier and "/Users/Dummy/testdata/audio/wave/stereol.wav" 
 	is the file to be transformed.
 
 * Use http GET method with a location parameter pointing to the http url of the intended resource.
   For example, if using curl
- 	curl http://localhost:3003/transform/WAVE_NORM?location=http:///localhost:4567/stereol.wav
-	where the WAVE_NORM is the transformation identifier and "/Users/Dummy/testdata/audio/wave/stereol.wav" 
-	is the file to be transformed.
+ 	curl http://transformation.fda.edu/transform/WAVE_NORM?location=http://www.fcla.edu/daitss-test/files/GLASS.WAV
+	where the WAVE_NORM is the transformation identifier and "http://www.fcla.edu/daitss-test/files/GLASS.WAV" 
+	is the URL resource to be transformed.
 
+HTTP return code
+----------------
+* 200 - successful.
+* 400 - missing the transformation identifier. The request does not specify a transformation identifier.
+* 404 - not found. Cannot locate the specified source file
+* 500 - Service Error, encounter errors during transformation process.
+* 501 - Cannot locate the transformation instruction on the given transformation identifier.
+
+	
 Documentation
 -------------
 [development wiki](http://wiki.github.com/daitss/transform/)
