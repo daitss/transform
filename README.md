@@ -1,17 +1,17 @@
-Format Transformation Service
+DAITSS Transformation Service
 =============================
+DAITSS Transformation Service execute the format transformation on a given file/resource based on given transformation
+identifier.  The transformation identifier is used to look up the transformation instruction to perform the format 
+transformation.  
 
-* The transformation service performs the format transformation on a given url. The url should contain a 
-  transformation identifier which is used to look up the defined transformation instruction, and optionally 
-  a source file for the transformation. 
-* The transformation identifier is then used to look up the actual transformation 
-  instruction in the config file i.e., transform.xml.
-* The transformation service then performs the format transformation, locally cache the created files 
-  with proper file extension and send back the link(s) of the created file(s).  The transformation service
-  would also return associated premis event and agent to record the result of the transformation and the software
-  that is used for the transformation.
-* The calling client would parse the return links to retrieve the created files.
-* Once the created file(s) are retrieved by the calling clients, the local caches for the files are removed.
+ * Given a request to transform a file/resource, extract the transformation identifier from the request. 
+ * Look up the transformation instruction for the transformation identifier in the config file i.e., config/transform.xml.
+ * The Transformation Service then performs the format transformation, locally cache the created files 
+   with proper file extension and send back the link(s) of the created file(s).  The Transformation Service
+   would also return associated PREMIS event and agent to record the result of the transformation and the software
+   that is used for the transformation. 
+ * The calling client would parse the returned links to retrieve the created files.
+ * Once the created file(s) are retrieved by the calling clients, the local caches for the files are removed.
 
 Quickstart
 ==========
@@ -25,7 +25,7 @@ Quickstart
 	3. Test the installation via the test harness. 
 	% bundle exec cucumber feature/*
 
-	4. Run the description srvice with thin (use "thin --help" to get additional information on using thin)
+	4. Run the transformation service with thin (use "thin --help" to get additional information on using thin)
 	% bundle exec thin start
 
 Requirement
@@ -35,7 +35,7 @@ Requirement
 * libxml-ruby (gem)
 * log4r (gem)
 * sinatra (gem) - a minimal web application framework.  It will work with any web server such as mongrel, thin, apache etc.
-* install any desired tools (such as ffmpeg, libquicktime, ghostscript, mencoder, etc) on your system.  The
+* install any desired format conversion tools (such as ffmpeg, libquicktime, mencoder, etc) on your system.  The
   config/transform.xml contains default setup to use those tools.
 
 License
