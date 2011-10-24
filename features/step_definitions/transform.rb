@@ -4,6 +4,7 @@ abs = FileUtils.pwd
 path = 'http://www.fcla.edu/daitss-test/files/'
 
 Given /^a PDF file$/ do
+  pending
   @transformID = "PDF_NORM"
   @file = "#{path}tagged.pdf"
 end
@@ -28,9 +29,9 @@ Given /^a non\-exist file$/ do
   @file = "file://#{abs}/test-files/GLA.tes"
 end
 
-Given /^a bad pdf$/ do
-  @transformID = "PDF_NORM"
-  @file = "#{path}etd.pdf"
+Given /^a bad file$/ do
+  @transformID = "WAVE_NORM"
+  @file = "#{path}tagged.pdf"
 end
 
 Given /^a valid transformation$/ do
@@ -51,7 +52,6 @@ When /^retrieving the processing instruction$/ do
 end
 
 Then /^I should receive (.+?) link to transformed file$/ do |num|  
-  puts last_response.body
   doc = XML::Document.string(last_response.body)
 
   # make sure there are expected number of bitstream objects

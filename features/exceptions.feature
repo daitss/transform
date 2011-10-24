@@ -6,6 +6,6 @@ Scenario: file not found
 	Then the status should be 404
 	
 Scenario: transformation failure
-	Given a bad pdf
+	Given a bad file
 	When transforming the file
 	Then the status should be 500
