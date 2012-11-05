@@ -47,6 +47,11 @@ task :retsina do
     sh "cap deploy -S target=retsina.fcla.edu:/opt/web-services/sites/transform -S who=daitss:daitss"
 end
 
+desc "deploy to development site (transform.marsala.fcla.edu)"
+task :marsala do
+	    sh "cap deploy -S target=marsala.fcla.edu:/opt/web-services/sites/transform -S who=#{user}:#{user}"
+end
+
 desc "deploy to ripple's test site (transform.ripple.fcla.edu)"
 task :ripple do
     sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/transform -S who=#{user}:#{user}"
