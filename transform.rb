@@ -139,7 +139,7 @@ get '/file' do
   if (File.exist?(path) && File.file?(path)) then
     # build the response
     headers 'Content-Type' => "application/octet-stream"
-    headers 'Content-Length' => File.size(path)
+    headers 'Content-Length' => File.size(path).to_s
     fhandle = File.open(path)
     body fhandle.read
 
