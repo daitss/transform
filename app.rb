@@ -17,6 +17,8 @@ require 'XformModule'
 
 include Datyl
 
+config = nil
+
 def get_config
   raise "No DAITSS_CONFIG environment variable has been set, so there's no configuration file to read"             unless ENV['DAITSS_CONFIG']
   raise "The DAITSS_CONFIG environment variable points to a non-existant file, (#{ENV['DAITSS_CONFIG']})"          unless File.exists? ENV['DAITSS_CONFIG']
@@ -54,11 +56,12 @@ configure do
   Datyl::Logger.info "Using temp directory #{ENV['TMPDIR']}"
 
   use Rack::CommonLogger, Datyl::Logger.new(:info, 'Rack:')
+  
 end
 
 error do
   e = @env['sinatra.error']
-
+  Datyl::Logger.err "Caught Error"
   request.body.rewind if request.body.respond_to?('rewind') # work around for verbose passenger warning
 
   Datyl::Logger.err "Caught exception #{e.class}: '#{e.message}'; backtrace follows", @env
@@ -77,13 +80,13 @@ end
 get '/transform/:id' do |transformID|
   #require 'ruby-debug'
   #debugger
-  xform = XformModule.new($tempdir)
+  xform = XformModule.new($tempdir, config)
   sourcepath = nil
   
   begin
     if (params["location"].nil?)
       # return the transformation instructions of the transformation identifier
-      result = xform.retrieve(transformID)
+      xform.retrieve(transformID)
     else
       Datyl::Logger.info "location = " + params["location"]
       url = URI.parse(params["location"].to_s)
@@ -101,13 +104,21 @@ get '/transform/:id' do |transformID|
         sourcepath = io.path
         io.close
       else
+        Datyl::Logger.err "invalid url location type"
         halt 400, "invalid url location type"
       end
 
-      halt 400, "invalid url location" unless sourcepath
-
+      unless sourcepath
+        Datyl::Logger.err "invalid url location"
+        halt 400, "invalid url location"
+      end
+      
       # make sure the file exist and it's a valid file
-      halt 404, "#{@sourcepath} does not exist" unless (File.exist?(sourcepath) && File.file?(sourcepath))
+      unless (File.exist?(sourcepath) && File.file?(sourcepath))
+        Datyl::Logger.err "#{@sourcepath} does not exist"
+        halt 404, "#{@sourcepath} does not exist"
+      end
+      
       xform.retrieve(transformID)
 
       @result = xform.transform(sourcepath) if sourcepath
@@ -115,10 +126,13 @@ get '/transform/:id' do |transformID|
       @agentNote = xform.software
     end
   rescue InstructionError => ie
+    Datyl::Logger.err "#{ie.message}"
     halt 501, "#{ie.message}"
   rescue TransformationError => te
+    Datyl::Logger.err "running into exception #{te}, #{te.message}\n#{te.backtrace.join('\n')}"
     halt 500, "running into exception #{te}, #{te.message}\n#{te.backtrace.join('\n')}"
   rescue e
+    Datyl::Logger.err "running into exception #{e}, #{e.message}\n#{e.backtrace.join('\n')}"
     halt [500, "running into exception #{e}, #{e.message}\n#{e.backtrace.join('\n')}"]
   end
 
@@ -134,36 +148,42 @@ end
 
 get '/file' do
   path = params[:path]
-  halt 400, "need to specify the resource" unless path
-
-  if (File.exist?(path) && File.file?(path)) then
-    # build the response
-    headers 'Content-Type' => "application/octet-stream"
-    headers 'Content-Length' => File.size(path).to_s
-    fhandle = File.open(path)
-    body fhandle.read
-
-    # delete the file after a successful GET
-    File.delete(path)
-    Datyl::Logger.info "#{path} has been retrieved and deleted"
-    # delete the parent directory if it's empty
-    if (Dir.entries(File.dirname(path)) == [".", ".."])
-      Dir.delete(File.dirname(path))
-    end
-
-  else
+  unless path
+    Datyl::Logger.err "need to specify the resource"
+    halt 400, "need to specify the resource" 
+  end
+  
+  unless (File.exist?(path) && File.file?(path)) 
+    Datyl::Logger.err "#{path} is no longer available"
     halt 410, "#{path} is no longer available"
+  end
+  
+  # build the response and send the file back
+  status 200
+  headers "Content-Type" => "application/octet-stream", "Content-Length" => File.size(path).to_s
+  send_file path
+  
+  # delete the file after a successful GET
+  File.delete(path)
+  Datyl::Logger.info "#{path} has been retrieved and deleted"
+  # delete the parent directory if it's empty
+  if (Dir.entries(File.dirname(path)) == [".", ".."])
+    Dir.delete(File.dirname(path))
   end
 end
 
 delete '/file' do
   # get params from request
   path = params[:path]
-
-  halt 400, "need to specify the resource  to the requested file" unless path
+  unless path
+    Datyl::Logger.err "need to specify the resource  to the requested file" 
+    halt 400, "need to specify the resource  to the requested file" 
+  end
+  
   if (File.exist?(path) && File.file?(path)) then
     File.delete(path)
   else
+    Datyl::Logger.err "#{path} is no longer available"
     halt 410, "#{path} is no longer available"
   end
 

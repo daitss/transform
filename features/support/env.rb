@@ -2,7 +2,7 @@ require "rubygems"
 require "bundler"
 Bundler.setup
 
-require File.dirname(__FILE__) + "/../../transform"
+require File.dirname(__FILE__) + "/../../app"
 
 # Force the application name because polyglot breaks the auto-detection logic.
 # Sinatra::Application.app_file = File.join(File.dirname(__FILE__), "/../../transform")
