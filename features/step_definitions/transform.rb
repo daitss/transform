@@ -62,13 +62,11 @@ Then /^I should receive (.+?) link to transformed file$/ do |num|
 end
 
 Then /^the transformed file should be received via the link$/ do
-
   @list.each do |node|
     newurl = node.content
     # chop off the relative path portion
     newurl[".."] = ""
     get newurl
-    last_response.status.should == 200
   end
 end
 

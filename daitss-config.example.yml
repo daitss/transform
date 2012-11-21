@@ -16,10 +16,45 @@ defaults:
 # checks the VIRTUAL_HOSTNAME environment variable to determine the
 # appropriate section to load.  Typically VIRTUAL_HOSTNAME is set in
 # the same place that the DAITSS_CONFIG environment is set.
+# 
+# In setting for the transformation serivce
+# <transformation ID>: define the transformation identifier
+#	<instruction>: define the transformation instruction on the transformation identifier 'xxx'.  It
+#	is the command line that will be used to carry out the format transformation.  
+#	for example, "ffmpeg -i $INPUT_FILE$ -sameq -acodec pcm_s16le -y $OUTPUT_FILE$" means the ffmpeg 
+#	will be used to perform the actual format transformation associated with the proper commmand line argument.  
+#	It is assumed that the specified tool, ffmpeg, is installed properly on the desktop where 
+#	the transformation service is running.  INPUT_FILE is used by the transformation to specify the
+#	input of the transformation instruction and OUTPUT_FILE is used to store the output of the format
+#	transformation.
+#	
+#	<extension> : define the file extension that will be used to create the output file.  This is
+#	to ensure the format for output of the transformation can be properly identified and validated.
+#	
+#	<identifier> : the agent identifier for the transformation service, to be used to generate proper
+#	versioned premis agent.
+#	
+#	<software> : describe the software that is used for the format transformation.  The software description
+#	is then used to generate premis agent detail.
 
 transform.example.org:
     log_syslog_facility:         LOG_LOCAL0
     log_filename:                transform.log
+    wave_norm:
+        instruction:            ffmpeg -i $INPUT_FILE$ -sameq -acodec pcm_s16le -y $OUTPUT_FILE$
+        extension:              .wav
+        identifier:             wave/norm/v0.1.1
+        software:               FFmpeg version , Copyright (c) 2000-2009 Fabrice Bellard, et al.
+    avi_norm:
+        instruction:            mencoder $INPUT_FILE$ -oac pcm -ovc lavc -lavcopts vcodec=mjpeg -o $OUTPUT_FILE$
+        extension:              .avi
+        identifier:             avi/norm/v0.1.1
+        software:               MEncoder SVN-r28728-snapshot-4.1.2 (C) 2000-2009 MPlayer Team
+    mov_norm:
+        instruction:            lqt_transcode -ac rawaudio -vc mjpa $INPUT_FILE$ $OUTPUT_FILE$
+        extension:              .mov
+        identifier:             mov/norm/v0.1.1
+        software:               libquicktime 1.1.5, depends_lib gettext, jpeg, libiconv, libpng, zlib, ffmpeg, faac, faad2, libvorbis, libogg, lame
 
 # transform:log_syslog_facility
 # -------------------------------

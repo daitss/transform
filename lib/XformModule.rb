@@ -1,8 +1,8 @@
 require 'xml'
 
-CONFIGFILE = File.join File.dirname(__FILE__), '..', 'config/transform.xml'
-INPUTFILE = '#INPUT_FILE#'
-OUTPUTFILE = '#OUTPUT_FILE#'
+
+INPUTFILE = '$INPUT_FILE$'
+OUTPUTFILE = '$OUTPUT_FILE$'
 BOUNDARY = '--page'
 IDPREFIX = "info:fda/daitss/transform/"
 
@@ -13,8 +13,8 @@ class XformModule
    attr_reader :software
    attr_reader :identifier
       
-  def initialize(tempdir)
-    @config = open(CONFIGFILE) { |io| XML::Document.io io } 
+  def initialize(tempdir, config)
+    @config = config
     @tempdir = tempdir
   end
 
@@ -23,33 +23,35 @@ class XformModule
   
   def retrieve(transformID)
     # retrieve the designated processing instruction from the config file
-    transformID.upcase!
-    transformation = @config.find_first("/transformations/transformation[@ID='#{transformID}']")
+    transformID.downcase!
+    transformation = @config.send(transformID)
 
     if (transformation == nil)
       raise InstructionError.new("cannot find transformation #{transformID}")
     end
 
-    #retrieve the transformation instruction
-    @instruction = transformation.find_first("instruction/text()").to_s
+    # retrieve the transformation instruction
+    @instruction = transformation["instruction"]
     if @instruction.nil?
       raise InstructionError.new("no transformation instruction is defined for #{transformID}")
     end
 
-    @extension = transformation.find_first("extension/text()").to_s
+    # retrieve the file extension to be used for the output file, to ensure the outputfile will be identified correctly
+    @extension = transformation["extension"]
     @extension = ""  if @extension.nil?
 
-    @identifier = transformation.find_first("identifier/text()")
+    # retrieve the agent identifier for the software used in the transformation
+    @identifier =  transformation["identifier"]
     if @identifier.nil?
       @identifier = IDPREFIX 
     else
       @identifier = IDPREFIX +  @identifier.to_s
     end
     
-    @software = transformation.find_first("software/text()").to_s
+    # retrieve detail software information used by the transformation
+    @software =  transformation["software"]
     @software = ""  if @software.nil?
   
-    transformation.to_s
   end
 
   # XXX host_url is not used with relativepaths, if we continue to go this way we can take it out.
