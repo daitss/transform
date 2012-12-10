@@ -78,8 +78,6 @@ not_found do
 end
 
 get '/transform/:id' do |transformID|
-  #require 'ruby-debug'
-  #debugger
   xform = XformModule.new($tempdir, config)
   sourcepath = nil
   
@@ -131,7 +129,7 @@ get '/transform/:id' do |transformID|
   rescue TransformationError => te
     Datyl::Logger.err "running into exception #{te}, #{te.message}\n#{te.backtrace.join('\n')}"
     halt 500, "running into exception #{te}, #{te.message}\n#{te.backtrace.join('\n')}"
-  rescue e
+  rescue => e
     Datyl::Logger.err "running into exception #{e}, #{e.message}\n#{e.backtrace.join('\n')}"
     halt [500, "running into exception #{e}, #{e.message}\n#{e.backtrace.join('\n')}"]
   end
@@ -187,6 +185,50 @@ delete '/file' do
     halt 410, "#{path} is no longer available"
   end
 
+end
+
+post '/transform/:id' do |transformID|
+  require 'ruby-debug'
+  debugger
+
+  begin
+    halt 400, "missing parameter file='@filename'" unless params['file']
+
+    # retrieve the file extension of the specified :filename
+    file_ext = File.extname(params['file'])
+    tempfile = params['file'][:tempfile].path
+    # many format transformation tool require the source file to be the in correct file extension, so we have to
+    # create a symbolic to the :tempfile with an expected file extension.
+    sourcepath = File.join(Dir.tmpdir, "transform_#{Process.pid}" + file_ext)
+    FileUtils::ln_s(tempfile, sourcepath)
+ 
+    xform = XformModule.new($tempdir, config)
+    xform.retrieve(transformID)
+
+    @result = xform.transform(sourcepath) if sourcepath
+    @agentId =  xform.identifier
+    @agentNote = xform.software
+    xform = nil  
+    # remove the temporary symbolic link
+    File.unlink(sourcepath) unless sourcepath.nil?
+    
+    # remove the temporary file created by sinatra-curl
+    params['file'][:tempfile].unlink unless params['file'][:tempfile].nil?
+    
+  rescue InstructionError    => ie
+    Datyl::Logger.err "#{ie.message}"
+    halt 501, "#{ie.message}"
+  rescue TransformationError => te
+    Datyl::Logger.err "running into exception #{te}, #{te.message}\n#{te.backtrace.join('\n')}"
+    halt 500, "running into exception #{te}, #{te.message}\n#{te.backtrace.join('\n')}"
+  rescue => e
+    Datyl::Logger.err "running into exception #{e}, #{e.message}\n#{e.backtrace.join('\n')}"
+    halt [500, "running into exception #{e}, #{e.message}\n#{e.backtrace.join('\n')}"]
+  end
+
+  # dump the xml output to the response
+  headers 'Content-Type' => 'application/xml'
+  body erb(:result) 
 end
 
 get '/status' do
