@@ -18,9 +18,7 @@ class XformModule
     @tempdir = tempdir
   end
 
-  def finalize
-  end
-  
+  # retrieve the processing instruction for the given transformID, as defined in the config file
   def retrieve(transformID)
     # retrieve the designated processing instruction from the config file
     transformID.downcase!
@@ -54,7 +52,7 @@ class XformModule
   
   end
 
-  # XXX host_url is not used with relativepaths, if we continue to go this way we can take it out.
+  # convert the [sourcepath] into a new file with a different file format, based on the extracted instruction.
   def transform(sourcepath)
     # extract the file name port from the source path
     ext = File.extname(sourcepath)

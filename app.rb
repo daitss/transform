@@ -77,6 +77,8 @@ not_found do
   "Not Found\n"
 end
 
+
+# Give a file to the transformation service to convert the file based on the transformID
 get '/transform/:id' do |transformID|
   xform = XformModule.new($tempdir, config)
   sourcepath = nil
@@ -144,6 +146,7 @@ get '/transform/:id' do |transformID|
   xform = nil
 end
 
+#download the file defined in the [;path] parameter
 get '/file' do
   path = params[:path]
   unless path
@@ -170,6 +173,7 @@ get '/file' do
   end
 end
 
+# define the file in the [:path] parameter, typically after the file has been retrieved through the get method
 delete '/file' do
   # get params from request
   path = params[:path]
@@ -227,6 +231,7 @@ get '/status' do
   [ 200, {'Content-Type'  => 'application/xml'}, "<status/>\n" ]
 end
 
+# clean up the temp directory used by the transformation service upon shutting down the transformation service.
 at_exit do
   Datyl::Logger.info "SHUTTING DOWN!, cleaning up #{$tempdir}"
   begin
