@@ -187,31 +187,23 @@ delete '/file' do
 
 end
 
+# POST a file to the transformation service to convert the file based on the transformID
+# ex:  curl -F file=@GLASS.WAV http://localhost:7006/transform/wave_norm
 post '/transform/:id' do |transformID|
-  require 'ruby-debug'
-  debugger
-
-  begin
+   begin
     halt 400, "missing parameter file='@filename'" unless params['file']
+    halt 400, "missing [file][:tempfile] parameter file='@filename'" unless params['file'][:tempfile]
 
-    # retrieve the file extension of the specified :filename
-    file_ext = File.extname(params['file'])
-    tempfile = params['file'][:tempfile].path
-    # many format transformation tool require the source file to be the in correct file extension, so we have to
-    # create a symbolic to the :tempfile with an expected file extension.
-    sourcepath = File.join(Dir.tmpdir, "transform_#{Process.pid}" + file_ext)
-    FileUtils::ln_s(tempfile, sourcepath)
+    sourcepath =  params['file'][:tempfile].path
  
     xform = XformModule.new($tempdir, config)
     xform.retrieve(transformID)
 
-    @result = xform.transform(sourcepath) if sourcepath
+    @result = xform.transform(sourcepath) 
     @agentId =  xform.identifier
     @agentNote = xform.software
     xform = nil  
-    # remove the temporary symbolic link
-    File.unlink(sourcepath) unless sourcepath.nil?
-    
+   
     # remove the temporary file created by sinatra-curl
     params['file'][:tempfile].unlink unless params['file'][:tempfile].nil?
     
