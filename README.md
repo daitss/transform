@@ -71,7 +71,7 @@ HTTP return code
 * 400 - missing the transformation identifier. The request does not specify a transformation identifier.
 * 404 - not found. Cannot locate the specified source file
 * 500 - Service Error, encounter errors during transformation process.
-* 501 - Cannot locate the transformation instruction on the given transformation identifier.
+* 501 - Cannot locate the transformation instruction in the daitss config file, on the given transformation identifier.
 
 	
 Documentation
