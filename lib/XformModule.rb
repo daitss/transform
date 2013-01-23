@@ -3,7 +3,7 @@ require 'pdfapilotParser'
 
 INPUTFILE = '$INPUT_FILE$'
 OUTPUTFILE = '$OUTPUT_FILE$'
-OREPORTFILE = '$REPORT_FILE$'
+REPORTFILE = '$REPORT_FILE$'
 IDPREFIX = "info:fda/daitss/transform/"
 
 class InstructionError < StandardError; end
@@ -70,7 +70,7 @@ class XformModule
     if @report_file.nil?
       command = @instruction.sub(INPUTFILE, sourcepath).sub(OUTPUTFILE, outputpath)
     else
-      command = @instruction.sub(INPUTFILE, sourcepath).sub(OUTPUTFILE, outputpath).sub(REPORT_FILE, @report_file)
+      command = @instruction.sub(INPUTFILE, sourcepath).sub(OUTPUTFILE, outputpath).sub(REPORTFILE, @report_file)
     end
       
     # backquote the external program, do the transformation 
