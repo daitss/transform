@@ -118,13 +118,19 @@ get '/transform/:id' do |transformID|
         Datyl::Logger.err "#{@sourcepath} does not exist"
         halt 404, "#{@sourcepath} does not exist"
       end
-      
-      xform.retrieve(transformID)
 
+      @event_outcome = "success"   
+      xform.retrieve(transformID)
       @result = xform.transform(sourcepath) if sourcepath
       @agentId =  xform.identifier
       @agentNote = xform.software
     end
+
+  # if there is no output file generated from the transformation processing, record the 
+  # command output in the event detail
+  rescue NoOutputFileError => oe
+    @event_outcome = 'failure'
+    @errors = xform.errors  
   rescue InstructionError => ie
     Datyl::Logger.err "#{ie.message}"
     halt 501, "#{ie.message}"
@@ -203,6 +209,7 @@ post '/transform/:id' do |transformID|
     xform = XformModule.new($tempdir, config)
     xform.retrieve(transformID)
 
+    @event_outcome = "success"
     @result = xform.transform(sourcepath) 
     @agentId =  xform.identifier
     @agentNote = xform.software
@@ -211,12 +218,17 @@ post '/transform/:id' do |transformID|
     # remove the temporary file created by sinatra-curl
     params['file'][:tempfile].unlink unless params['file'][:tempfile].nil?
     
+  # if there is no output file generated from the transformation processing, record the 
+  # command output in the event detail
+  rescue NoOutputFileError => oe
+    @event_outcome = 'failure'
+    @errors = xform.errors
   rescue InstructionError    => ie
-    Datyl::Logger.err "#{ie.message}"
-    halt 501, "#{ie.message}"
+    Datyl::Logger.err "running into exception #{ie}\n#{ie.backtrace.join('\n')}"
+    halt 501, "#{ie}"
   rescue TransformationError => te
-    Datyl::Logger.err "running into exception #{te}, #{te.message}\n#{te.backtrace.join('\n')}"
-    halt 500, "running into exception #{te}, #{te.message}\n#{te.backtrace.join('\n')}"
+    Datyl::Logger.err "running into exception #{te}\n#{te.backtrace.join('\n')}"
+    halt 500, "running into exception #{te}\n#{te.backtrace.join('\n')}"
   rescue => e
     Datyl::Logger.err "running into exception #{e}, #{e.message}\n#{e.backtrace.join('\n')}"
     halt [500, "running into exception #{e}, #{e.message}\n#{e.backtrace.join('\n')}"]

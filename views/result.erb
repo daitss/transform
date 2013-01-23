@@ -16,9 +16,15 @@
 	<eventType>transformation</eventType>
 	<eventDateTime><%= Time.now.xmlschema %></eventDateTime>
 	<eventOutcomeInformation>
-		<eventOutcome>success</eventOutcome>
+		<eventOutcome><%= @event_outcome %></eventOutcome>
 	</eventOutcomeInformation>
-
+	<% unless @errors.nil? %>
+	<eventOutcomeDetail>
+		<% @errors.each do |error| %>
+		<error><%= error %></error>
+		<% end %>
+	</eventOutcomeDetail>
+	<% end %>
 	<linkingAgentIdentifier>
 	<linkingAgentIdentifierType>URI</linkingAgentIdentifierType>
 	<linkingAgentIdentifierValue><%= @agentId %></linkingAgentIdentifierValue>

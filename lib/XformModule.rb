@@ -1,13 +1,14 @@
 require 'xml'
-
+require 'pdfapilotParser'
 
 INPUTFILE = '$INPUT_FILE$'
 OUTPUTFILE = '$OUTPUT_FILE$'
-BOUNDARY = '--page'
+OREPORTFILE = '$REPORT_FILE$'
 IDPREFIX = "info:fda/daitss/transform/"
 
 class InstructionError < StandardError; end
 class TransformationError < StandardError; end
+class NoOutputFileError < StandardError; end
 
 class XformModule
    attr_reader :software
@@ -49,29 +50,51 @@ class XformModule
     # retrieve detail software information used by the transformation
     @software =  transformation["software"]
     @software = ""  if @software.nil?
-  
+    
+    # retrieve the report file that will be used the format transformation tool
+    @report_file =  transformation["report_file"]
   end
 
   # convert the [sourcepath] into a new file with a different file format, based on the extracted instruction.
   def transform(sourcepath)
-    # extract the file name port from the source path
+    @errors = nil
+    
+    # extract the file name portion from the source path
     ext = File.extname(sourcepath)
     filename = File.basename(sourcepath, ext)
     # create a directory to hold the transformed files
     FileUtils.makedirs( @tempdir + "/" + filename)
     outputpath =  @tempdir  + "/" + filename + "/" + "transformed" + @extension
-    command = @instruction.sub(INPUTFILE, sourcepath).sub(OUTPUTFILE, outputpath)
-
+    
+    #if there is a report file that should be generated from the transformation service, add that in the command 
+    if @report_file.nil?
+      command = @instruction.sub(INPUTFILE, sourcepath).sub(OUTPUTFILE, outputpath)
+    else
+      command = @instruction.sub(INPUTFILE, sourcepath).sub(OUTPUTFILE, outputpath).sub(REPORT_FILE, @report_file)
+    end
+      
     # backquote the external program, do the transformation 
-    `#{command}`
+    command_output = `#{command}`
+
     if ($? != 0)
       # clean up
-      FileUtils.rmdir( @tempdir  + "/" + filename)
-      raise TransformationError.new("#{command} failed")
+      FileUtils.remove_entry_secure( @tempdir  + "/" + filename)
+      raise TransformationError.new("#{command} failed, output: #{command_output}")
     end
 
-    # build the response
-    tmpfiles =  @tempdir  + "/" + filename + "/*"
+    # no output file generated
+    raise NoOutputFileError.new("no expected output file generated from #{command}") unless File.exists?(outputpath)
+
+    # parse the report file if a report_file is to be generated
+    # TODO: currently, we only have pdfapilot parser.  In the future if another parser is added, we will have to 
+    # refactor the code to use ruby reflection.
+    if @report_file && File.exists?(@report_file)
+      PdfapilotParser parer(@report_file)
+      @errors = parser.parse
+    end
+    
+    # create the links to output file(s)
+    tmpfiles =  @tempdir  + "/" + filename + "/*" + @extension
 
     # sorted by the numerical order of the file name,
     # mtime only goes to seconds, so can't do this :(   File.mtime(x) <=> File.mtime(y) 
