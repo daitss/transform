@@ -89,7 +89,7 @@ class XformModule
     # TODO: currently, we only have pdfapilot parser.  In the future if another parser is added, we will have to 
     # refactor the code to use ruby reflection.
     if @report_file && File.exists?(@report_file)
-      PdfapilotParser parer(@report_file)
+      parser = PdfapilotParser.new(@report_file)
       @errors = parser.parse
     end
     
