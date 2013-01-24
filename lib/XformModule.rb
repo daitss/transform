@@ -78,18 +78,19 @@ class XformModule
     command_output = `#{command}`
     output_code = $?
     
-    # parse the report file if a report_file is to be generated
-    # TODO: currently, we only have pdfapilot parser.  In the future if another parser is added, we will have to 
-    # use ruby reflection.
-    if @report_file && File.exists?(@report_file)
-      parser = PdfapilotParser.new(@report_file)
-      @errors = parser.parse
-      File.delete(@report_file)
+    # no output file generated
+    unless File.exists?(outputpath)
+      # parse the report file if a report_file is to be generated
+      # TODO: currently, we only have pdfapilot parser.  In the future if another parser is added, we will have to 
+      # use ruby reflection.
+      if @report_file && File.exists?(@report_file)
+        parser = PdfapilotParser.new(@report_file)
+        @errors = parser.parse
+        File.delete(@report_file)
+        raise NoOutputFileError.new("no output file generated from #{command}")         
+      end
     end
       
-    # no output file generated
-    raise NoOutputFileError.new("no output file generated from #{command}") unless File.exists?(outputpath)
-    
     # problem encountered during format transformation
     if (output_code != 0)      
       # clean up

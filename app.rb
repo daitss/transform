@@ -135,11 +135,11 @@ get '/transform/:id' do |transformID|
     Datyl::Logger.err "#{ie.message}"
     halt 501, "#{ie.message}"
   rescue TransformationError => te
-    Datyl::Logger.err "running into exception #{te}, #{te.message}\n#{te.backtrace.join('\n')}"
-    halt 500, "running into exception #{te}, #{te.message}\n#{te.backtrace.join('\n')}"
+    Datyl::Logger.err "#{te.message}\n#{te.backtrace.join('\n')}"
+    halt 500, "#{te.message}\n#{te.backtrace.join('\n')}"
   rescue => e
-    Datyl::Logger.err "running into exception #{e}, #{e.message}\n#{e.backtrace.join('\n')}"
-    halt [500, "running into exception #{e}, #{e.message}\n#{e.backtrace.join('\n')}"]
+    Datyl::Logger.err "exception: #{e.message}\n#{e.backtrace.join('\n')}"
+    halt [500, "exception: #{e.message}\n#{e.backtrace.join('\n')}"]
   end
 
   # remove temp file
@@ -219,19 +219,19 @@ post '/transform/:id' do |transformID|
     params['file'][:tempfile].unlink unless params['file'][:tempfile].nil?
     
   # if there is no output file generated from the transformation processing, record the 
-  # command output in the event detail
+  # parsed errors in the event detail
   rescue NoOutputFileError => oe
     @event_outcome = 'failure'
     @errors = xform.errors
   rescue InstructionError    => ie
-    Datyl::Logger.err "running into exception #{ie}\n#{ie.backtrace.join('\n')}"
-    halt 501, "#{ie}"
+    Datyl::Logger.err "#{ie.message}"
+    halt 501, "#{ie.message}"
   rescue TransformationError => te
-    Datyl::Logger.err "running into exception #{te}\n#{te.backtrace.join('\n')}"
-    halt 500, "running into exception #{te}\n#{te.backtrace.join('\n')}"
+    Datyl::Logger.err "#{te.message}\n#{te.backtrace.join('\n')}"
+    halt 500, "#{te.message}\n#{te.backtrace.join('\n')}"
   rescue => e
-    Datyl::Logger.err "running into exception #{e}, #{e.message}\n#{e.backtrace.join('\n')}"
-    halt [500, "running into exception #{e}, #{e.message}\n#{e.backtrace.join('\n')}"]
+    Datyl::Logger.err "exception: #{e.message}\n#{e.backtrace.join('\n')}"
+    halt [500, "exception: #{e.message}\n#{e.backtrace.join('\n')}"]
   end
 
   # dump the xml output to the response
