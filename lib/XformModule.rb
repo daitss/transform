@@ -13,7 +13,8 @@ class NoOutputFileError < StandardError; end
 class XformModule
    attr_reader :software
    attr_reader :identifier
-      
+   attr_reader :errors
+       
   def initialize(tempdir, config)
     @config = config
     @tempdir = tempdir
@@ -75,24 +76,27 @@ class XformModule
       
     # backquote the external program, do the transformation 
     command_output = `#{command}`
-
-    if ($? != 0)
+    output_code = $?
+    
+    # parse the report file if a report_file is to be generated
+    # TODO: currently, we only have pdfapilot parser.  In the future if another parser is added, we will have to 
+    # use ruby reflection.
+    if @report_file && File.exists?(@report_file)
+      parser = PdfapilotParser.new(@report_file)
+      @errors = parser.parse
+      File.delete(@report_file)
+    end
+      
+    # no output file generated
+    raise NoOutputFileError.new("no output file generated from #{command}") unless File.exists?(outputpath)
+    
+    # problem encountered during format transformation
+    if (output_code != 0)      
       # clean up
       FileUtils.remove_entry_secure( @tempdir  + "/" + filename)
       raise TransformationError.new("#{command} failed, output: #{command_output}")
     end
-
-    # no output file generated
-    raise NoOutputFileError.new("no expected output file generated from #{command}") unless File.exists?(outputpath)
-
-    # parse the report file if a report_file is to be generated
-    # TODO: currently, we only have pdfapilot parser.  In the future if another parser is added, we will have to 
-    # refactor the code to use ruby reflection.
-    if @report_file && File.exists?(@report_file)
-      parser = PdfapilotParser.new(@report_file)
-      @errors = parser.parse
-    end
-    
+         
     # create the links to output file(s)
     tmpfiles =  @tempdir  + "/" + filename + "/*" + @extension
 

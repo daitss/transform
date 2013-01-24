@@ -59,7 +59,7 @@ transform.example.org:
 #        software:               libquicktime 1.1.5, depends_lib gettext, jpeg, libiconv, libpng, zlib, ffmpeg, faac, faad2, libvorbis, libogg, lame
 # uncomment only if pdf->pdfa conversion software is installed.
 #    pdf_norm:
-#        instruction:            /opt/pdfapilot/pdfaPilot $INPUT_FILE$ --fontfolder=/usr/share/fonts/msttcorefonts/ --onlypdfa --forceconversion_pagestoimage --noprogress --nohits --outputfile=$OUTPUT_FILE$ --report=XML,PATH=$REPORT_FILE$
+#        instruction:            /opt/pdfapilot/pdfaPilot $INPUT_FILE$ --fontfolder=/usr/share/fonts/msttcorefonts/ --onlypdfa --forceconversion_pagestoimage --noprogress --nohits --outputfile=$OUTPUT_FILE$ --report=XML,IFNOPDFA,PATH=$REPORT_FILE$
 #        extension:              .pdf
 #        identifier:             pdf/norm/v1.0.0
 #        software:               callas pdfaPilot CLI 3.1.156 (x64) 2000-2012 callas software gmb

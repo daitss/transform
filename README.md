@@ -65,6 +65,11 @@ Usage
 	where the WAVE_NORM is the transformation identifier and "http://www.fcla.edu/daitss-test/files/GLASS.WAV" 
 	is the URL resource to be transformed.
 
+* Use http POST method by uploading the intended resource to the transformation service
+  For example, if using curl
+	 curl -F file=@GLASS.WAV http://transformation.fda.edu/transform/WAVE_NORM
+	 where the WAVE_NORM is the transformation identifier and "GLASS.WAV" is the file to be uploaded.
+
 HTTP return code
 ----------------
 * 200 - successful.
