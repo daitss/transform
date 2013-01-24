@@ -19,7 +19,8 @@
 		<eventOutcome><%= @event_outcome %></eventOutcome>
 	</eventOutcomeInformation>
 	<% unless @errors.nil? %>
-	<eventOutcomeDetail><% @errors.each do |error| %><error><%= error %></error><% end %>
+	<eventOutcomeDetail><% @errors.each do |error| %>
+		<error><%= error %></error><% end %>
 	</eventOutcomeDetail>
 	<% end %>
 	<linkingAgentIdentifier>

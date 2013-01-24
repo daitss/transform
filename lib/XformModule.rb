@@ -8,7 +8,7 @@ IDPREFIX = "info:fda/daitss/transform/"
 
 class InstructionError < StandardError; end
 class TransformationError < StandardError; end
-class NoOutputFileError < StandardError; end
+class RecordConversionError < StandardError; end
 
 class XformModule
    attr_reader :software
@@ -78,19 +78,17 @@ class XformModule
     command_output = `#{command}`
     output_code = $?
     
-    # no output file generated
-    unless File.exists?(outputpath)
-      # parse the report file if a report_file is to be generated
-      # TODO: currently, we only have pdfapilot parser.  In the future if another parser is added, we will have to 
-      # use ruby reflection.
-      if @report_file && File.exists?(@report_file)
-        parser = PdfapilotParser.new(@report_file)
-        @errors = parser.parse
-        File.delete(@report_file)
-        raise NoOutputFileError.new("no output file generated from #{command}")         
-      end
+  
+    # parse the report file if a report_file is to be generated
+    # TODO: currently, we only have pdfapilot parser.  In the future if another parser is added, we will have to 
+    # use ruby reflection.
+    if @report_file && File.exists?(@report_file)
+      parser = PdfapilotParser.new(@report_file)
+      @errors = parser.parse
+      File.delete(@report_file)
+      raise RecordConversionError.new("record conversion error during #{command}")         
     end
-      
+   
     # problem encountered during format transformation
     if (output_code != 0)      
       # clean up

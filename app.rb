@@ -126,11 +126,11 @@ get '/transform/:id' do |transformID|
       @agentNote = xform.software
     end
 
-  # if there is no output file generated from the transformation processing, record the 
-  # command output in the event detail
-  rescue NoOutputFileError => oe
-    @event_outcome = 'failure'
-    @errors = xform.errors  
+  # if there is report file generated during the transformation processing, record the 
+  # parsed errors in the event detail
+  rescue RecordConversionError => oe
+      @event_outcome = 'failure'
+      @errors = xform.errors
   rescue InstructionError => ie
     Datyl::Logger.err "#{ie.message}"
     halt 501, "#{ie.message}"
@@ -218,9 +218,9 @@ post '/transform/:id' do |transformID|
     # remove the temporary file created by sinatra-curl
     params['file'][:tempfile].unlink unless params['file'][:tempfile].nil?
     
-  # if there is no output file generated from the transformation processing, record the 
+  # if there is report file generated during the transformation processing, record the 
   # parsed errors in the event detail
-  rescue NoOutputFileError => oe
+  rescue RecordConversionError => oe
     @event_outcome = 'failure'
     @errors = xform.errors
   rescue InstructionError    => ie
