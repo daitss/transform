@@ -17,12 +17,12 @@
 	<eventDateTime><%= Time.now.xmlschema %></eventDateTime>
 	<eventOutcomeInformation>
 		<eventOutcome><%= @event_outcome %></eventOutcome>
+		<% unless @errors.nil? %>
+		<eventOutcomeDetail><eventOutcomeDetailExtension><% @errors.each do |error| %>
+			<error><%= error %></error><% end %>
+		</eventOutcomeDetailExtension></eventOutcomeDetail>
+		<% end %>		
 	</eventOutcomeInformation>
-	<% unless @errors.nil? %>
-	<eventOutcomeDetail><% @errors.each do |error| %>
-		<error><%= error %></error><% end %>
-	</eventOutcomeDetail>
-	<% end %>
 	<linkingAgentIdentifier>
 	<linkingAgentIdentifierType>URI</linkingAgentIdentifierType>
 	<linkingAgentIdentifierValue><%= @agentId %></linkingAgentIdentifierValue>
