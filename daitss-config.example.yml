@@ -57,7 +57,7 @@ transform.example.org:
 #        extension:              .mov
 #        identifier:             mov/norm/v0.1.1
 #        software:               libquicktime 1.1.5, depends_lib gettext, jpeg, libiconv, libpng, zlib, ffmpeg, faac, faad2, libvorbis, libogg, lame
-# uncomment only if pdf->pdfa conversion software is installed.
+# uncomment only if pdfapilot for pdf->pdfa conversion software is installed.
 #    pdf_norm:
 #        instruction:            /opt/pdfapilot/pdfaPilot $INPUT_FILE$ --fontfolder=/usr/share/fonts/msttcorefonts/ --onlypdfa --forceconversion_pagestoimage --noprogress --nohits --outputfile=$OUTPUT_FILE$ --report=XML,IFNOPDFA,PATH=$REPORT_FILE$
 #        extension:              .pdf
