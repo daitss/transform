@@ -83,8 +83,6 @@ get '/transform/:id' do |transformID|
   halt 400, "missing parameter location='@filename'" unless params['location']
   xform = XformModule.new($tempdir, config)
   sourcepath = nil
-  require 'ruby-debug'
-  debugger
   begin
     Datyl::Logger.info "location = " + params["location"]
     url = URI.parse(params["location"].to_s)
