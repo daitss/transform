@@ -80,18 +80,16 @@ end
 
 # Give a file to the transformation service to convert the file based on the transformID
 get '/transform/:id' do |transformID|
+  halt 400, "missing parameter location='@filename'" unless params['location']
   xform = XformModule.new($tempdir, config)
   sourcepath = nil
-  
+  require 'ruby-debug'
+  debugger
   begin
-    if (params["location"].nil?)
-      # return the transformation instructions of the transformation identifier
-      xform.retrieve(transformID)
-    else
-      Datyl::Logger.info "location = " + params["location"]
-      url = URI.parse(params["location"].to_s)
+    Datyl::Logger.info "location = " + params["location"]
+    url = URI.parse(params["location"].to_s)
 
-      case url.scheme
+    case url.scheme
       when "file"
         sourcepath = url.path
       when "http"
@@ -106,31 +104,30 @@ get '/transform/:id' do |transformID|
       else
         Datyl::Logger.err "invalid url location type"
         halt 400, "invalid url location type"
-      end
-
-      unless sourcepath
-        Datyl::Logger.err "invalid url location"
-        halt 400, "invalid url location"
-      end
-      
-      # make sure the file exist and it's a valid file
-      unless (File.exist?(sourcepath) && File.file?(sourcepath))
-        Datyl::Logger.err "#{@sourcepath} does not exist"
-        halt 404, "#{@sourcepath} does not exist"
-      end
-
-      @event_outcome = "success"   
-      xform.retrieve(transformID)
-      @result = xform.transform(sourcepath) if sourcepath
-      @agentId =  xform.identifier
-      @agentNote = xform.software
     end
+
+    unless sourcepath
+      Datyl::Logger.err "invalid url location"
+      halt 400, "invalid url location"
+    end
+
+    # make sure the file exist and it's a valid file
+    unless (File.exist?(sourcepath) && File.file?(sourcepath))
+      Datyl::Logger.err "#{@sourcepath} does not exist"
+      halt 404, "#{@sourcepath} does not exist"
+    end
+
+    @event_outcome = "success"   
+    xform.retrieve(transformID)
+    @result = xform.transform(sourcepath) if sourcepath
+    @agentId =  xform.identifier
+    @agentNote = xform.software
 
   # if there is report file generated during the transformation processing, record the 
   # parsed errors in the event detail
   rescue RecordConversionError => oe
-      @event_outcome = 'failure'
-      @errors = xform.errors
+    @event_outcome = 'failure'
+    @errors = xform.errors
   rescue InstructionError => ie
     Datyl::Logger.err "#{ie.message}"
     halt 501, "#{ie.message}"
@@ -159,17 +156,17 @@ get '/file' do
     Datyl::Logger.err "need to specify the resource"
     halt 400, "need to specify the resource" 
   end
-  
+
   unless (File.exist?(path) && File.file?(path)) 
     Datyl::Logger.err "#{path} is no longer available"
     halt 410, "#{path} is no longer available"
   end
-  
+
   # build the response and send the file back
   status 200
   headers "Content-Type" => "application/octet-stream", "Content-Length" => File.size(path).to_s
   send_file path
-  
+
   # delete the file after a successful GET
   File.delete(path)
   Datyl::Logger.info "#{path} has been retrieved and deleted"
