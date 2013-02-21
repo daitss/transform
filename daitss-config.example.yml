@@ -63,7 +63,7 @@ transform.example.org:
 #        extension:              .pdf
 #        identifier:             pdf/norm/v1.0.0
 #        software:               callas pdfaPilot CLI 3.1.156 (x64) 2000-2012 callas software gmb
-#        report_file:            /home/cchou/report.xml
+#        report_file:            pdfapilot_report.xml
 #
 # transform:log_syslog_facility
 # -------------------------------

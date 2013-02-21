@@ -72,7 +72,7 @@ class XformModule
       command = @instruction.sub(INPUTFILE, sourcepath).sub(OUTPUTFILE, outputpath)
     else
        report_path = @tempdir + "/" + @report_file
-      command = @instruction.sub(INPUTFILE, sourcepath).sub(OUTPUTFILE, outputpath).sub(REPORTFILE, repor_path)
+      command = @instruction.sub(INPUTFILE, sourcepath).sub(OUTPUTFILE, outputpath).sub(REPORTFILE, report_path)
     end
       
     # backquote the external program, do the transformation 
