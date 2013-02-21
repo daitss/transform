@@ -18,6 +18,7 @@ require 'XformModule'
 include Datyl
 
 config = nil
+tempdir = nil
 
 def get_config
   raise "No DAITSS_CONFIG environment variable has been set, so there's no configuration file to read"             unless ENV['DAITSS_CONFIG']
@@ -32,8 +33,7 @@ configure do
   config = get_config
 
   # create a unique temporary directory to hold the output files.
-  $tempdir = Dir.mktmpdir
-  # puts "create #{$tempdir}"
+  tempdir = Dir.mktmpdir
   
   disable :logging        # Stop CommonLogger from logging to STDERR; we'll set it up ourselves.
 
@@ -81,7 +81,7 @@ end
 # Give a file to the transformation service to convert the file based on the transformID
 get '/transform/:id' do |transformID|
   halt 400, "missing parameter location='@filename'" unless params['location']
-  xform = XformModule.new($tempdir, config)
+  xform = XformModule.new(tempdir, config)
   sourcepath = nil
   begin
     Datyl::Logger.info "location = " + params["location"]
@@ -201,7 +201,7 @@ post '/transform/:id' do |transformID|
 
     sourcepath =  params['file'][:tempfile].path
  
-    xform = XformModule.new($tempdir, config)
+    xform = XformModule.new(tempdir, config)
     xform.retrieve(transformID)
 
     @event_outcome = "success"
@@ -240,9 +240,9 @@ end
 
 # clean up the temp directory used by the transformation service upon shutting down the transformation service.
 at_exit do
-  Datyl::Logger.info "SHUTTING DOWN!, cleaning up #{$tempdir}"
+  Datyl::Logger.info "SHUTTING DOWN!, cleaning up #{tempdir}"
   begin
-    FileUtils.remove_entry_secure($tempdir)
+    FileUtils.remove_entry_secure(tempdir)
   rescue e
     Datyl::Logger.info  "running into exception #{e}, #{e.message}\n#{e.backtrace.join('\n')}"
   end

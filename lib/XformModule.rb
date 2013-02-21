@@ -66,12 +66,13 @@ class XformModule
     # create a directory to hold the transformed files
     FileUtils.makedirs( @tempdir + "/" + filename)
     outputpath =  @tempdir  + "/" + filename + "/" + "transformed" + @extension
-    
+    report_path = nil
     #if there is a report file that should be generated from the transformation service, add that in the command 
     if @report_file.nil?
       command = @instruction.sub(INPUTFILE, sourcepath).sub(OUTPUTFILE, outputpath)
     else
-      command = @instruction.sub(INPUTFILE, sourcepath).sub(OUTPUTFILE, outputpath).sub(REPORTFILE, @report_file)
+       report_path = @tempdir + "/" + @report_file
+      command = @instruction.sub(INPUTFILE, sourcepath).sub(OUTPUTFILE, outputpath).sub(REPORTFILE, repor_path)
     end
       
     # backquote the external program, do the transformation 
@@ -79,13 +80,13 @@ class XformModule
     output_code = $?
     
   
-    # parse the report file if a report_file is to be generated
+    # parse the report file if a report file is to be generated
     # TODO: currently, we only have pdfapilot parser.  In the future if another parser is added, we will have to 
     # use ruby reflection.
-    if @report_file && File.exists?(@report_file)
-      parser = PdfapilotParser.new(@report_file)
+    if report_path && File.exists?(report_path)
+      parser = PdfapilotParser.new(report_path)
       @errors = parser.parse
-      File.delete(@report_file)
+      File.delete(report_path)
       raise RecordConversionError.new("record conversion error during #{command}")         
     end
    
