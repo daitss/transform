@@ -28,6 +28,10 @@ Quickstart
 	4. Run the transformation service with thin (use "thin --help" to get additional information on using thin)
 	% bundle exec thin start
 
+Current Production Code      
+----------------------
+git commit sha1 - 78de58c120de71f702dc4adedb082309e5740102
+
 Requirement
 -----------
 * ruby (tested on 1.8.6 and 1.8.7)
