@@ -30,7 +30,7 @@ Quickstart
 
 Current Production Code      
 ----------------------
-git commit sha1 - 78de58c120de71f702dc4adedb082309e5740102
+* https://github.com/daitss/transform/tree/78de58c120de71f702dc4adedb082309e5740102
 
 Requirement
 -----------
