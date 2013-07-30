@@ -30,7 +30,7 @@ Quickstart
 
 Current Production Code      
 ----------------------
-* https://github.com/daitss/transform/tree/78de58c120de71f702dc4adedb082309e5740102
+* Release, https://github.com/daitss/transform/releases/tag/v.2.0.0
 
 Requirement
 -----------
