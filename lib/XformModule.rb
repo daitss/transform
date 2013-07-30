@@ -93,7 +93,10 @@ class XformModule
     # problem encountered during format transformation
     if (output_code != 0)      
       # clean up
-      FileUtils.remove_entry_secure( @tempdir  + "/" + filename)
+      if (File.exist?(@tempdir + '/' + filename))
+          FileUtils.remove_entry_secure( @tempdir  + '/' + filename)
+      end
+      
       raise TransformationError.new("#{command} failed, output: #{command_output}")
     end
          
