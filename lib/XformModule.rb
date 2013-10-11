@@ -79,15 +79,21 @@ class XformModule
     command_output = `#{command}`
     output_code = $?
     
-  
     # parse the report file if a report file is to be generated
     # TODO: currently, we only have pdfapilot parser.  In the future if another parser is added, we will have to 
     # use ruby reflection.
-    if report_path && File.exists?(report_path)
-      parser = PdfapilotParser.new(report_path)
-      @errors = parser.parse
-      File.delete(report_path)
-      raise RecordConversionError.new("record conversion error during #{command}")         
+    if report_path
+      parser = PdfapilotParser.new
+      if File.exists?(report_path)
+        @errors = parser.parse_xml(report_path)
+        File.delete(report_path)
+        raise RecordConversionError.new("record conversion error during #{command}")
+      else
+        @errors = parser.parse_output(output_code, command_output)
+        unless @errors.empty?
+          raise RecordConversionError.new("record conversion error during #{command}")
+        end
+      end         
     end
    
     # problem encountered during format transformation
@@ -95,8 +101,7 @@ class XformModule
       # clean up
       if (File.exist?(@tempdir + '/' + filename))
           FileUtils.remove_entry_secure( @tempdir  + '/' + filename)
-      end
-      
+      end      
       raise TransformationError.new("#{command} failed, output: #{command_output}")
     end
          
