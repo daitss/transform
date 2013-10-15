@@ -42,6 +42,6 @@ class PdfapilotParser
       end
     end
     doc = nil
+    @errors
   end
-  @errors
 end
