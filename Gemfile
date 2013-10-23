@@ -5,9 +5,9 @@ gem "log4r"
 gem "thin"
 
 group :test do
-  gem "cucumber", :require => "spec"
+  gem "cucumber", "~> 1.3.1"
   gem "rspec", :require => "spec"
-  gem "ruby-debug", :require => "spec"
+  gem "debugger"
   gem "rack-test", :require => 'rack/test'
   gem "libxml-ruby", :require => 'libxml'
 end

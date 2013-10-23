@@ -11,8 +11,8 @@ Scenario: transform a wave file
 Scenario: transform an AVI file
 	Given an AVI file
 	When transforming the file
-	Then I should receive 1 link to transformed file
-	And the status should be 200
+    Then the status should be 200
+	And I should receive 1 link to transformed file
 	And the transformed file should be received via the link
 	And the status should be 200
 	

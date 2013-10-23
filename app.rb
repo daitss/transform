@@ -131,10 +131,10 @@ get '/transform/:id' do |transformID|
     halt 501, "#{ie.message}"
   rescue TransformationError => te
     Datyl::Logger.err "#{te.message}\n#{te.backtrace.join('\n')}"
-    halt 500, "#{te.message}\n#{te.backtrace.join('\n')}"
+    halt 500, "#{te.message}"
   rescue => e
     Datyl::Logger.err "exception: #{e.message}\n#{e.backtrace.join('\n')}"
-    halt [500, "exception: #{e.message}\n#{e.backtrace.join('\n')}"]
+    halt [500, "exception: #{e.message}"]
   end
 
   # remove temp file

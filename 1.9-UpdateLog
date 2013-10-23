@@ -1,0 +1,18 @@
+1. Gemfile
+   - lock into cucumber 1.3.1
+   - ruby-debug is deprecated in 1.9.  Change gem ruby-debug
+     to 
+     gem debugger
+
+2. Config.ru
+   - Ruby 1.9 remove current directory from load path, http://stackoverflow.com/questions/9750610/ruby-require-error-cannot-load-such-file.
+     Change require 'app'
+     to
+     require './app'
+
+3. features/step_definitions/transform.rb
+   - remove reference to 'ruby-debug' and 'rspec/expectations'. No longer needed in 1.9
+
+4. features/step_definitions/transform.rb
+   - rspec need to use eq method in ruby 1.9. Change == to eq.
+   

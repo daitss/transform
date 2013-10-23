@@ -8,8 +8,6 @@ require File.dirname(__FILE__) + "/../../app"
 # Sinatra::Application.app_file = File.join(File.dirname(__FILE__), "/../../transform")
 
 require 'rack/test'
-require 'rspec/expectations'
-require 'ruby-debug'
 
 Sinatra::Application.set :environment, :test
 
