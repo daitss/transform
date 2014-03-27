@@ -1,9 +1,12 @@
 require 'xml'
+require 'datyl/logger'
 
 # This is the list of return code from pdfapilot that we want to report and move-on (i.e. not snafu)
-# based on the pdfapilot manual, the return code for encrypted file is 105, but the testing
-# revealed that it is 26880 instead.
-Report_Error = [26880] 
+# based on the pdfapilot manual.
+# 26880 - the return code for encrypted file 
+# 256 - the return code for problem in fonts
+# 26368 - the return code for non-welformed PDF
+Report_Error = [26880, 256, 26368] 
 
 # a class dedicated to parse the report file generated from pdfapilot software
 class PdfapilotParser
@@ -12,7 +15,9 @@ class PdfapilotParser
     @errors = Array.new
   end
   
+  # parse the output of pdfapilot command
   def parse_output(output_code, command_output)
+    Datyl::Logger.info "error code #{output_code}"
     # check if the output_cdoe is in the list of pdfapilot error code to be reported
     if (Report_Error.include?(output_code))
       #record the conversion error message
@@ -21,6 +26,7 @@ class PdfapilotParser
     @errors
   end
       
+  # parse the xml report file resulted from pdf to pdfa conversion by pdfapilot
   def parse_xml(report_file)
     doc = open(report_file) { |io| XML::Document.io io }
 
