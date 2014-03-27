@@ -76,6 +76,8 @@ Then /^I should receive an xml with the detail processing instructions$/ do
 end
 
 Then /^the status should be (.+?)$/ do |code|
-  last_response.status.should == code.to_i
+  puts last_response.status
+
+  last_response.status.should eq(code.to_i)
 end
 
