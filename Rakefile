@@ -1,5 +1,8 @@
+# The following gems are required in order to deploy through capistrano
+# gem install capistrano -v 2.11.2
+# gem install railsless-deploy -v 2.1.2
 require 'rake'
-require 'rake/rdoctask'
+require 'rake/task'
 #require 'spec/rake/spectask'
 require 'cucumber/rake/task'
 
