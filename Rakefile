@@ -10,10 +10,10 @@ Cucumber::Rake::Task.new
 
 desc "rspec"
 task :rspec do
-Spec::Rake::SpecTask.new do |t|
-  t.libs << 'lib'
-  t.libs << 'spec'
-end
+  Spec::Rake::SpecTask.new do |t|
+    t.libs << 'lib'
+    t.libs << 'spec'
+  end
 end
 
 # -*- mode:ruby; -*-
@@ -45,27 +45,27 @@ end
 
 desc "deploy to darchive's production site (transform.fda.fcla.edu)"
 task :darchive do
-    sh "cap deploy -S target=darchive.fcla.edu:/opt/web-services/sites/transform -S who=#{user}:#{user}"
+  sh "cap deploy -S target=darchive.fcla.edu:/opt/web-services/sites/transform -S who=#{user}:#{user}"
 end
 
 desc "deploy to development site (transform.retsina.fcla.edu)"
 task :retsina do
-    sh "cap deploy -S target=retsina.fcla.edu:/opt/web-services/sites/transform -S who=daitss:daitss"
+  sh "cap deploy -S target=retsina.fcla.edu:/opt/web-services/sites/transform -S who=daitss:daitss"
 end
 
 desc "deploy to development site (transform.marsala.fcla.edu)"
 task :marsala do
-	    sh "cap deploy -S target=marsala.fcla.edu:/opt/web-services/sites/transform -S who=#{user}:#{user}"
+  sh "cap deploy -S target=marsala.fcla.edu:/opt/web-services/sites/transform -S who=#{user}:#{user}"
 end
 
 desc "deploy to ripple's test site (transform.ripple.fcla.edu)"
 task :ripple do
-    sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/transform -S who=#{user}:#{user}"
+  sh "cap deploy -S target=ripple.fcla.edu:/opt/web-services/sites/transform -S who=#{user}:#{user}"
 end
 
 desc "deploy to tarchive's coop (transform.tarchive.fcla.edu?)"
 task :tarchive_coop do
-    sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/coop/transform -S who=#{user}:#{user}"
+  sh "cap deploy -S target=tarchive.fcla.edu:/opt/web-services/sites/coop/transform -S who=#{user}:#{user}"
 end
 
 defaults = [:restart]
