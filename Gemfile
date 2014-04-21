@@ -1,8 +1,10 @@
 source "http://rubygems.org"
+
 gem "sinatra"
 gem "datyl", :git => "git://github.com/daitss/datyl.git"
 gem "log4r"
 gem "thin"
+gem "railsless-deploy"
 
 group :test do
   gem "cucumber", "~> 1.3.1"
