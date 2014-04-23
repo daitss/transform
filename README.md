@@ -34,7 +34,8 @@ Current Production Code
 
 Requirement
 -----------
-* ruby (tested on 1.8.6 and 1.8.7)
+* ruby 1.9.3 - master
+* ruby (tested on 1.8.6 and 1.8.7) - please use ruby1.8.7 branch
 * cucumber (gem)
 * libxml-ruby (gem)
 * log4r (gem)
