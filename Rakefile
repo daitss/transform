@@ -3,16 +3,19 @@
 # gem install railsless-deploy -v 2.1.2
 require 'rake'
 require 'rake/task'
-#require 'spec/rake/spectask'
 require 'cucumber/rake/task'
+require 'rspec/core'
+require 'rspec/core/rake_task'
 
 Cucumber::Rake::Task.new
 
 desc "rspec"
 task :rspec do
-  Spec::Rake::SpecTask.new do |t|
-    t.libs << 'lib'
-    t.libs << 'spec'
+  RSpec::Core::RakeTask.new do |t|
+    t.pattern = "./**/*_spec.rb"
+    t.ruby_opts = "-w"
+    #t.libs << 'lib'
+    #t.libs << 'spec'
   end
 end
 

@@ -10,5 +10,3 @@ Scenario: retrieve undefined processing instruction
 	Given a invalid transformation
 	When retrieving the processing instruction
 	Then the status should be 501
-
-

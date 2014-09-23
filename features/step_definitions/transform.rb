@@ -77,7 +77,6 @@ end
 
 Then /^the status should be (.+?)$/ do |code|
   puts last_response.status
-
-  last_response.status.should eq(code.to_i)
+  expect(last_response.status).to eq(code.to_i)
 end
 

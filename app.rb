@@ -11,9 +11,8 @@ require 'net/http'
 require 'datyl/logger'
 require 'datyl/config'
 
+require_relative 'lib/XformModule.rb'
 
-$:.unshift File.join(File.dirname(__FILE__), 'lib')
-require 'XformModule'
 
 include Datyl
 
@@ -82,6 +81,7 @@ end
 get '/transform/:id' do |transformID|
   halt 400, "missing parameter location='@filename'" unless params['location']
   xform = XformModule.new(tempdir, config)
+
   sourcepath = nil
   begin
     Datyl::Logger.info "location = " + params["location"]

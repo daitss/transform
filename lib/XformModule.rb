@@ -24,6 +24,8 @@ class XformModule
   def retrieve(transformID)
     # retrieve the designated processing instruction from the config file
     transformID.downcase!
+    transformID = transformID.to_sym
+
     transformation = @config.send(transformID)
 
     if (transformation == nil)

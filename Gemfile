@@ -6,10 +6,9 @@ gem "log4r"
 gem "thin"
 gem "railsless-deploy"
 
-group :test do
-  gem "cucumber", "~> 1.3.1"
-  gem "rspec", :require => "spec"
-  gem "debugger"
-  gem "rack-test", :require => 'rack/test'
-  gem "libxml-ruby", :require => 'libxml'
-end
+gem "cucumber"
+gem "rspec"#
+gem "debugger"
+gem "rack-test"#
+gem "libxml-ruby"
+
