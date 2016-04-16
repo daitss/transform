@@ -55,7 +55,7 @@ Then /^I should receive (.+?) link to transformed file$/ do |num|
   doc = XML::Document.string(last_response.body)
 
   # make sure there are expected number of bitstream objects
-  @list = doc.find("//premis:link", 'premis' => 'info:lc/xmlns/premis-v2')
+  @list = doc.find("//premis:link", 'premis' => 'http://www.loc.gov/premis/v3')
   i = 0
   @list.each {|n| i = i+1 }
   i.should == num.to_i
