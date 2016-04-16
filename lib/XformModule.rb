@@ -13,6 +13,7 @@ class RecordConversionError < StandardError; end
 class XformModule
    attr_reader :software
    attr_reader :identifier
+   attr_reader :instruction
    attr_reader :errors
        
   def initialize(tempdir, config)

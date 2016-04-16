@@ -77,6 +77,26 @@ not_found do
   "Not Found\n"
 end
 
+# Get the transformation instruction for the given transformID (like pdf_norm, mov_norm, avi_norm as defined in the action plan)
+get '/transform_instruction/:id' do |transformID|
+  xform = XformModule.new(tempdir, config)
+  begin
+    xform.retrieve(transformID)
+
+  rescue InstructionError => ie
+    Datyl::Logger.err "#{ie.message}"
+    halt 404, "#{ie.message}"
+  rescue => e
+    Datyl::Logger.err "exception: #{e.message}\n#{e.backtrace.join('\n')}"
+    halt [500, "exception: #{e.message}"]
+  end
+
+  # dump the xml output to the response
+  status 200
+  headers 'Content-Type' => 'application/xml'
+  body xform.instruction
+  xform = nil
+end
 
 # Give a file to the transformation service to convert the file based on the transformID
 get '/transform/:id' do |transformID|
